@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pygame
+import pygame, sys, time
 from globalValues import *
 from pacman import Pacman
 
@@ -11,22 +11,30 @@ def main():
     pygame.display.set_caption("Pacman")
     run = True
     pacman = Pacman()
-
+    lastTime = time.time()
+    
     while run:
+
+        dt = time.time() - lastTime
+        dt *= 60
+        pacman.move(dt)
+        lastTime = time.time()
+        
         for event in pygame.event.get():  
             if event.type == pygame.QUIT:
                 run = False
-        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            pacman.moveLeft()
+            pacman.changeDirToLeft()
         if keys[pygame.K_RIGHT]:
-            pacman.moveRight()
+            pacman.changeDirToRight()
         if keys[pygame.K_UP]:
-            pacman.moveUp()
+            pacman.changeDirToUp()
         if keys[pygame.K_DOWN]:
-            pacman.moveDown()
-
+            pacman.changeDirToDown()
+        if keys[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
         win.fill((0, 0, 0))
         pygame.draw.rect(
             win, pacman.Colour, (pacman.x, pacman.y, pacman.width, pacman.height)

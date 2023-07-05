@@ -6,6 +6,8 @@ class Pacman:
     y = 30
     width = 40
     height = 40
+    velocity = 5
+    currentDir = Direction.RIGHT
 
     def isMoveLeftPossible(self):
         if self.x > 0:
@@ -27,20 +29,33 @@ class Pacman:
             return True
         else: return False
         
-    def moveLeft(self):
+    def changeDirToLeft(self):
         if self.isMoveLeftPossible():
-            self.x -= 5
+            self.currentDir = Direction.LEFT
     
-    def moveRight(self):
+    def changeDirToRight(self):
         if self.isMoveRightPossible():
-            self.x += 5
+            self.currentDir = Direction.RIGHT
     
-    def moveUp(self):
+    def changeDirToUp(self):
         if self.isMoveUpPossible():
-            self.y -= 5
+            self.currentDir = Direction.UP
 
-    def moveDown(self):
+    def changeDirToDown(self):
         if self.isMoveDownPossible():
-            self.y += 5
+            self.currentDir = Direction.DOWN
 
-    
+    def move(self, dt):
+        match self.currentDir:
+            case Direction.LEFT:
+                if self.isMoveLeftPossible():
+                    self.x -= self.velocity * dt
+            case Direction.RIGHT:
+                if self.isMoveRightPossible():
+                    self.x += self.velocity * dt
+            case Direction.UP:
+                if self.isMoveUpPossible():
+                    self.y -= self.velocity * dt
+            case Direction.DOWN:
+                if self.isMoveDownPossible():
+                    self.y += self.velocity * dt
