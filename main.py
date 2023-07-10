@@ -3,7 +3,6 @@
 import pygame, sys, time
 from globalValues import *
 from pacman import Pacman
-from map import Map
 
 
 def main():
@@ -11,15 +10,12 @@ def main():
     win = pygame.display.set_mode(SCREENSIZE)
     pygame.display.set_caption("Pacman")
     run = True
-    pacman = Pacman()
-    map = Map()
-    lastTime = time.time()
+    pacman = Pacman(RED, 40, 40)
+    allSpritesList = pygame.sprite.Group()
+    allSpritesList.add(pacman)
+    clock = pygame.time.Clock()
 
     while run:
-        dt = time.time() - lastTime
-        dt *= 60
-        pacman.move(dt)
-        lastTime = time.time()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -37,22 +33,13 @@ def main():
         if keys[pygame.K_ESCAPE]:
             pygame.quit()
             sys.exit()
+        
+        pacman.move()
 
         win.fill((0, 0, 0))
-        pygame.draw.rect(
-            win, pacman.Colour, (pacman.x, pacman.y, pacman.width, pacman.height)
-        )
-        pygame.draw.rect(
-            win,
-            map.Colour,
-            (
-                map.obstacle1.x,
-                map.obstacle1.y,
-                map.obstacle1.width,
-                map.obstacle1.height,
-            ),
-        )
+        allSpritesList.draw(win)
         pygame.display.update()
+        clock.tick(60)
 
 
 if __name__ == "__main__":
