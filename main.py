@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pygame, sys
+import pygame
 from globalValues import *
 from pacman import Pacman
 from wall import Wall
@@ -46,4 +46,3 @@ while run:
 
     clock.tick(FPS)
 pygame.quit()
-sys.exit()

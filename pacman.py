@@ -12,8 +12,9 @@ class Pacman(pygame.sprite.Sprite):
         self.rect.center = [posX, posY]
         self.currentDir = Direction.RIGHT
         self.prevousDir = Direction.RIGHT
+
     velocity = 4
-    
+
     def changeDirToLeft(self):
         self.prevousDir = self.currentDir
         self.currentDir = Direction.LEFT
@@ -31,9 +32,27 @@ class Pacman(pygame.sprite.Sprite):
         self.currentDir = Direction.DOWN
 
     def update(self, walls):
+        checkbox = Pacman(
+            self.image.get_width(),
+            self.image.get_height(),
+            self.rect.centerx,
+            self.rect.centery,
+            BLACK
+        )
+        checkbox.currentDir = self.currentDir
+        checkbox.prevousDir = self.prevousDir
+        match checkbox.currentDir:
+            case Direction.LEFT:
+                checkbox.rect.x -= self.velocity
+            case Direction.RIGHT:
+                checkbox.rect.x += self.velocity
+            case Direction.UP:
+                checkbox.rect.y -= self.velocity
+            case Direction.DOWN:
+                checkbox.rect.y += self.velocity
         isCollision = False
         for wall in walls:
-            isCollision = self.rect.colliderect(wall)
+            isCollision = checkbox.rect.colliderect(wall)
             if isCollision == True:
                 break
         if isCollision == False:
