@@ -1,47 +1,49 @@
 #!/usr/bin/python3
 
-import pygame, sys, time
+import pygame, sys
 from globalValues import *
 from pacman import Pacman
+from wall import Wall
 
 
-def main():
-    pygame.init()
-    win = pygame.display.set_mode(SCREENSIZE)
-    pygame.display.set_caption("Pacman")
-    run = True
-    pacman = Pacman(RED, 40, 40)
-    allSpritesList = pygame.sprite.Group()
-    allSpritesList.add(pacman)
-    clock = pygame.time.Clock()
+pygame.init()
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode(SCREENSIZE)
+pygame.display.set_caption("Pacman")
 
-    while run:
+pacmanGroup = pygame.sprite.Group()
+pacman = Pacman(50, 50, 450, 450, RED)
+pacmanGroup.add(pacman)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
+wallGroup = pygame.sprite.Group()
+wall1 = Wall(50, 50, 75, 75, BLUE)
+wallGroup.add(wall1)
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            pacman.changeDirToLeft()
-        if keys[pygame.K_RIGHT]:
-            pacman.changeDirToRight()
-        if keys[pygame.K_UP]:
-            pacman.changeDirToUp()
-        if keys[pygame.K_DOWN]:
-            pacman.changeDirToDown()
-        if keys[pygame.K_ESCAPE]:
-            pygame.quit()
-            sys.exit()
-        
-        pacman.move()
+run = True
+while run:
+    screen.fill(BLACK)
 
-        win.fill((0, 0, 0))
-        allSpritesList.draw(win)
-        pygame.display.update()
-        clock.tick(60)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
+        if event.type == pygame.KEYDOWN:
+            match event.key:
+                case pygame.K_UP:
+                    pacman.changeDirToUp()
+                case pygame.K_DOWN:
+                    pacman.changeDirToDown()
+                case pygame.K_LEFT:
+                    pacman.changeDirToLeft()
+                case pygame.K_RIGHT:
+                    pacman.changeDirToRight()
+                case pygame.K_ESCAPE:
+                    run = False
 
+    pacmanGroup.update(wallGroup)
+    wallGroup.draw(screen)
+    pacmanGroup.draw(screen)
+    pygame.display.flip()
 
-if __name__ == "__main__":
-    main()
-    pygame.quit()
+    clock.tick(FPS)
+pygame.quit()
+sys.exit()
