@@ -11,57 +11,42 @@ class Pacman(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
         self.currentDir = Direction.RIGHT
-        self.prevousDir = Direction.RIGHT
 
-    velocity = 4
+    def changeDir(self, newDir):
+        self.currentDir = newDir
 
-    def changeDirToLeft(self):
-        self.prevousDir = self.currentDir
-        self.currentDir = Direction.LEFT
+    def move(self, entity):
+        match entity.currentDir:
+            case Direction.LEFT:
+                entity.rect.x -= 1
+            case Direction.RIGHT:
+                entity.rect.x += 1
+            case Direction.UP:
+                entity.rect.y -= 1
+            case Direction.DOWN:
+                entity.rect.y += 1
 
-    def changeDirToRight(self):
-        self.prevousDir = self.currentDir
-        self.currentDir = Direction.RIGHT
-
-    def changeDirToUp(self):
-        self.prevousDir = self.currentDir
-        self.currentDir = Direction.UP
-
-    def changeDirToDown(self):
-        self.prevousDir = self.currentDir
-        self.currentDir = Direction.DOWN
-
-    def update(self, walls):
-        checkbox = Pacman(
+    def createCheckbox(self):
+        return Pacman(
             self.image.get_width(),
             self.image.get_height(),
             self.rect.centerx,
             self.rect.centery,
-            BLACK
+            BLACK,
         )
+
+    def update(self, walls):
+        checkbox = self.createCheckbox()
         checkbox.currentDir = self.currentDir
-        checkbox.prevousDir = self.prevousDir
-        match checkbox.currentDir:
-            case Direction.LEFT:
-                checkbox.rect.x -= self.velocity
-            case Direction.RIGHT:
-                checkbox.rect.x += self.velocity
-            case Direction.UP:
-                checkbox.rect.y -= self.velocity
-            case Direction.DOWN:
-                checkbox.rect.y += self.velocity
-        isCollision = False
-        for wall in walls:
-            isCollision = checkbox.rect.colliderect(wall)
-            if isCollision == True:
+
+        for _ in range(VELOCITY):
+            self.move(checkbox)
+            isCollision = False
+            for wall in walls:
+                isCollision = checkbox.rect.colliderect(wall)
+                if isCollision == True:
+                    break
+            if isCollision == False:
+                self.move(self)
+            else:
                 break
-        if isCollision == False:
-            match self.currentDir:
-                case Direction.LEFT:
-                    self.rect.x -= self.velocity
-                case Direction.RIGHT:
-                    self.rect.x += self.velocity
-                case Direction.UP:
-                    self.rect.y -= self.velocity
-                case Direction.DOWN:
-                    self.rect.y += self.velocity
