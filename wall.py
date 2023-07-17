@@ -1,5 +1,5 @@
-from globalValues import *
 import pygame
+from globalValues import *
 
 
 class Wall(pygame.sprite.Sprite):
