@@ -15,9 +15,21 @@ pacmanGroup = pygame.sprite.Group()
 pacman = Pacman(50, 50, 450, 450, RED)
 pacmanGroup.add(pacman)
 
+walls = []
 wallGroup = pygame.sprite.Group()
-wall1 = Wall(50, 50, 75, 75, BLUE)
-wallGroup.add(wall1)
+for i in range(16):
+    wall = walls.append(Wall(50, 50, 75 + 50*i, 75, BLUE))
+for i in range(16):
+    wall = walls.append(Wall(50, 50, 75 + 50*i, 825, BLUE))
+for i in range(14):
+    wall = walls.append(Wall(50, 50, 75, 125 + 50*i, BLUE))
+for i in range(14):
+    wall = walls.append(Wall(50, 50, 825, 125 + 50*i, BLUE))
+for wall in walls:
+    wallGroup.add(wall)
+# wall1 = Wall(50, 50, 75, 75, BLUE)
+# wallGroup.add(wall1)
+# for i in range(10):    
 
 run = True
 while run:
