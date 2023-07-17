@@ -1,5 +1,5 @@
-from globalValues import *
 import pygame
+from globalValues import *
 from wall import Wall
 
 
