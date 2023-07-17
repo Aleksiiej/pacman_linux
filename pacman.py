@@ -1,16 +1,10 @@
-import pygame
+from entity import Entity
 from globalValues import *
 
 
-class Pacman(pygame.sprite.Sprite):
+class Pacman(Entity):
     def __init__(self, width, height, posX, posY, color):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        #    self.image = pygame.image.load("./content/image_file.png")
-        self.rect = self.image.get_rect()
-        self.rect.center = [posX, posY]
-        self.currentDir = Direction.RIGHT
+        super().__init__(width, height, posX, posY, color)
 
     def changeDir(self, newDir):
         self.currentDir = newDir
