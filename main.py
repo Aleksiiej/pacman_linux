@@ -2,6 +2,7 @@
 
 import pygame
 from globalValues import *
+from ghost import Ghost
 from pacman import Pacman
 from map import Map
 
@@ -14,6 +15,10 @@ pygame.display.set_caption("Pacman")
 pacmanGroup = pygame.sprite.Group()
 pacman = Pacman(50, 50, 450, 450, RED)
 pacmanGroup.add(pacman)
+
+ghostsGroup = pygame.sprite.Group()
+ghost = Ghost(50, 50, 125, 125, YELLOW)
+ghostsGroup.add(ghost)
 
 wallGroup = pygame.sprite.Group()
 map = Map(wallGroup)
@@ -39,8 +44,10 @@ while run:
                     run = False
 
     pacmanGroup.update(wallGroup)
+    ghostsGroup.update(wallGroup)
     wallGroup.draw(screen)
     pacmanGroup.draw(screen)
+    ghostsGroup.draw(screen)
     pygame.display.flip()
 
     clock.tick(FPS)
