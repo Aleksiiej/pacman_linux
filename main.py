@@ -13,7 +13,7 @@ screen = pygame.display.set_mode(SCREENSIZE)
 pygame.display.set_caption("Pacman")
 
 pacmanGroup = pygame.sprite.Group()
-pacman = Pacman(50, 50, 450, 450, RED)
+pacman = Pacman(50, 50, 75, 75, RED)
 pacmanGroup.add(pacman)
 
 ghostsGroup = pygame.sprite.Group()
