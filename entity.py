@@ -11,3 +11,4 @@ class Entity(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
         self.currentDir = Direction.RIGHT
+        self.proposedDir = Direction.RIGHT

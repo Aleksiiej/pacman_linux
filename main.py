@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 import pygame
 from globalValues import *
 from ghost import Ghost
@@ -25,6 +23,7 @@ map = Map(wallGroup)
 
 run = True
 while run:
+    clock.tick(FPS)
     screen.fill(BLACK)
 
     for event in pygame.event.get():
@@ -33,7 +32,7 @@ while run:
         if event.type == pygame.KEYDOWN:
             match event.key:
                 case pygame.K_UP:
-                    pacman.changeDir(Direction.UP)
+                    pacman.changeDir(Direction.UP) 
                 case pygame.K_DOWN:
                     pacman.changeDir(Direction.DOWN)
                 case pygame.K_LEFT:
@@ -50,5 +49,4 @@ while run:
     ghostsGroup.draw(screen)
     pygame.display.flip()
 
-    clock.tick(FPS)
 pygame.quit()
