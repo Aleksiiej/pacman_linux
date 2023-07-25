@@ -33,8 +33,7 @@ class Pacman(Entity):
 
     def checkCollisionWithWalls(self, checkbox, walls):
         for wall in walls:
-            isCollision = checkbox.rect.colliderect(wall)
-            if isCollision == True:
+            if checkbox.rect.colliderect(wall):
                 return True
         return False
 
