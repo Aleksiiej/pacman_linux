@@ -39,24 +39,23 @@ class Pacman(Entity):
         return False
 
     def update(self, walls):
-        checkbox = self.createCheckbox()
-
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
+                checkbox = self.createCheckbox()
                 self.move(checkbox)
                 isCollision = self.checkCollisionWithWalls(checkbox, walls)
                 if isCollision == True:
                     pass
-                elif isCollision == False:
+                else:
                     self.move(self)
-            elif self.currentDir != self.proposedDir:
+            else:
+                checkbox = self.createCheckbox()
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 isCollision = self.checkCollisionWithWalls(checkbox, walls)
                 if isCollision == True:
                     checkbox.currentDir = self.currentDir
-                    
                     self.move(self)
-                elif isCollision == False:
+                else:
                     self.currentDir = self.proposedDir
                     self.move(self)
