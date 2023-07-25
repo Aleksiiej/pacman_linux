@@ -49,7 +49,6 @@ class Pacman(Entity):
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 if self.checkCollisionWithWalls(checkbox, walls):
-                    checkbox.currentDir = self.currentDir
                     self.move(self)
                 else:
                     self.currentDir = self.proposedDir
