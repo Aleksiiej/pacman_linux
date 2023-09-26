@@ -6,9 +6,6 @@ class Pacman(Entity):
     def __init__(self, width, height, posX, posY, color):
         super().__init__(width, height, posX, posY, color)
 
-    def changeDir(self, newDir):
-        self.proposedDir = newDir
-
     def move(self, entity):
         match entity.currentDir:
             case Direction.LEFT:
@@ -37,21 +34,22 @@ class Pacman(Entity):
                 return True
         return False
 
+    def tryMoveForward(self, checkbox, walls):
+        self.move(checkbox)
+        if not self.checkCollisionWithWalls(checkbox, walls):
+            self.move(self)
+
     def update(self, walls):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
-                self.move(checkbox)
-                if not self.checkCollisionWithWalls(checkbox, walls):
-                    self.move(self)
+                self.tryMoveForward(checkbox, walls)
             else:
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 if self.checkCollisionWithWalls(checkbox, walls):
                     checkbox = self.createCheckbox()
-                    self.move(checkbox)
-                    if not self.checkCollisionWithWalls(checkbox, walls):
-                        self.move(self)
+                    self.tryMoveForward(checkbox, walls)
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
