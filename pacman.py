@@ -48,12 +48,10 @@ class Pacman(Entity):
                 self.move(checkbox)
                 if not self.checkCollisionWithWalls(checkbox, walls):
                     self.move(self)
-                self.restoreCheckbox(checkbox)
             else:
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 if self.checkCollisionWithWalls(checkbox, walls):
-                    del checkbox
                     checkbox = self.createCheckbox()
                     self.move(checkbox)
                     if not self.checkCollisionWithWalls(checkbox, walls):
