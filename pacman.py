@@ -31,10 +31,6 @@ class Pacman(Entity):
         ret.currentDir, ret.proposedDir = self.currentDir, self.proposedDir
         return ret
 
-    def restoreCheckbox(self, checkbox):
-        checkbox.currentDir = self.currentDir
-        checkbox.proposedDir = self.proposedDir
-
     def checkCollisionWithWalls(self, checkbox, walls):
         for wall in walls:
             if checkbox.rect.colliderect(wall):
@@ -59,4 +55,3 @@ class Pacman(Entity):
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
-            self.restoreCheckbox(checkbox)
