@@ -32,13 +32,13 @@ while run:
         if event.type == pygame.KEYDOWN:
             match event.key:
                 case pygame.K_UP:
-                    pacman.changeDir(Direction.UP)
+                    pacman.proposedDir = Direction.UP
                 case pygame.K_DOWN:
-                    pacman.changeDir(Direction.DOWN)
+                    pacman.proposedDir = Direction.DOWN
                 case pygame.K_LEFT:
-                    pacman.changeDir(Direction.LEFT)
+                    pacman.proposedDir = Direction.LEFT
                 case pygame.K_RIGHT:
-                    pacman.changeDir(Direction.RIGHT)
+                    pacman.proposedDir = Direction.RIGHT
                 case pygame.K_ESCAPE:
                     run = False
 
