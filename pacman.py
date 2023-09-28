@@ -33,23 +33,31 @@ class Pacman(Entity):
             if checkbox.rect.colliderect(wall):
                 return True
         return False
+    
+    def transferPosToOppositeSide(self):
+        if(self.rect.centerx < 0):
+            self.rect.centerx = 950
+        if(self.rect.centerx > 950):
+            self.rect.centerx = 0
 
-    def tryMoveForward(self, checkbox, walls):
+    def moveForward(self, checkbox, walls):
         self.move(checkbox)
         if not self.checkCollisionWithWalls(checkbox, walls):
             self.move(self)
+            self.transferPosToOppositeSide()
 
     def update(self, walls):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
-                self.tryMoveForward(checkbox, walls)
+                self.moveForward(checkbox, walls)
             else:
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 if self.checkCollisionWithWalls(checkbox, walls):
                     checkbox = self.createCheckbox()
-                    self.tryMoveForward(checkbox, walls)
+                    self.moveForward(checkbox, walls)
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
+    
