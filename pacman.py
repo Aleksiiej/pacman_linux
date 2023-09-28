@@ -1,3 +1,4 @@
+import pygame
 from entity import Entity
 from globalValues import *
 
@@ -60,4 +61,14 @@ class Pacman(Entity):
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
-    
+
+    def drawPacman(self, screen, images):
+        counter = 0
+        if self.currentDir == Direction.UP:
+            screen.blit(pygame.transform.rotate(images[counter // 5], 90), (self.rect.centerx - 25, self.rect.centery - 25))
+        elif self.currentDir == Direction.DOWN:
+            screen.blit(pygame.transform.rotate(images[counter // 5], 270), (self.rect.centerx - 25, self.rect.centery - 25))
+        elif self.currentDir == Direction.LEFT:
+            screen.blit(pygame.transform.flip(images[counter // 5], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
+        elif self.currentDir == Direction.RIGHT:
+            screen.blit(images[counter // 5], (self.rect.centerx - 25, self.rect.centery - 25))

@@ -21,6 +21,10 @@ ghostsGroup.add(ghost)
 wallGroup = pygame.sprite.Group()
 map = Map(wallGroup)
 
+pacmanImages = []
+for i in range(1,5):
+    pacmanImages.append(pygame.transform.scale(pygame.image.load(f'assets/pacman_images/{i}.png'), (50, 50)))
+
 run = True
 while run:
     clock.tick(FPS)
@@ -45,7 +49,8 @@ while run:
     pacmanGroup.update(wallGroup)
     ghostsGroup.update(wallGroup)
     wallGroup.draw(screen)
-    pacmanGroup.draw(screen)
+    # pacmanGroup.draw(screen)
+    pacman.drawPacman(screen, pacmanImages)
     ghostsGroup.draw(screen)
     pygame.display.flip()
 
