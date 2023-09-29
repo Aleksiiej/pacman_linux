@@ -70,15 +70,22 @@ class Pacman(pygame.sprite.Sprite):
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
-            self.drawPacman(screen)
+        self.drawPacman(screen)
 
     def drawPacman(self, screen):
-        counter = 0
+        self.image = self.images[self.currentImage]
+
         if self.currentDir == Direction.UP:
-            screen.blit(pygame.transform.rotate(self.images[counter // 5], 90), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.rotate(self.images[self.currentImage], 90), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.DOWN:
-            screen.blit(pygame.transform.rotate(self.images[counter // 5], 270), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.rotate(self.images[self.currentImage], 270), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.LEFT:
-            screen.blit(pygame.transform.flip(self.images[counter // 5], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.flip(self.images[self.currentImage], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.RIGHT:
-            screen.blit(self.images[counter // 5], (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(self.images[self.currentImage], (self.rect.centerx - 25, self.rect.centery - 25))
+
+        self.currentImage += 1
+        if self.currentImage >= len(self.images):
+            self.currentImage = 0
+        
+
