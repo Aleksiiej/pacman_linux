@@ -1,6 +1,5 @@
 import pygame
 from globalValues import *
-from ghost import Ghost
 from pacman import Pacman
 from map import Map
 
@@ -10,20 +9,15 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode(SCREENSIZE)
 pygame.display.set_caption("Pacman")
 
-pacmanGroup = pygame.sprite.Group()
-pacman = Pacman(50, 50, 75, 75, RED)
-pacmanGroup.add(pacman)
-
-ghostsGroup = pygame.sprite.Group()
-ghost = Ghost(50, 50, 125, 125, YELLOW)
-ghostsGroup.add(ghost)
-
-wallGroup = pygame.sprite.Group()
-map = Map(wallGroup)
-
 pacmanImages = []
 for i in range(1,5):
     pacmanImages.append(pygame.transform.scale(pygame.image.load(f'assets/pacman_images/{i}.png'), (50, 50)))
+pacman = Pacman(50, 50, 75, 75, pacmanImages)
+pacmanGroup = pygame.sprite.Group()
+pacmanGroup.add(pacman)
+
+wallGroup = pygame.sprite.Group()
+map = Map(wallGroup)
 
 run = True
 while run:
@@ -46,12 +40,8 @@ while run:
                 case pygame.K_ESCAPE:
                     run = False
 
-    pacmanGroup.update(wallGroup)
-    ghostsGroup.update(wallGroup)
+    pacmanGroup.update(wallGroup, screen)
     wallGroup.draw(screen)
-    # pacmanGroup.draw(screen)
-    pacman.drawPacman(screen, pacmanImages)
-    ghostsGroup.draw(screen)
     pygame.display.flip()
 
 pygame.quit()

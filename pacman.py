@@ -1,12 +1,21 @@
 import pygame
-from entity import Entity
 from globalValues import *
 
 
-class Pacman(Entity):
-    def __init__(self, width, height, posX, posY, color):
-        super().__init__(width, height, posX, posY, color)
+class Pacman(pygame.sprite.Sprite):
+    def __init__(self, width, height, posX, posY, images):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([width, height])
+        self.rect = self.image.get_rect()
+        self.rect.center = [posX, posY]
 
+        self.currentImage = 0
+        self.images = images
+        self.image = self.images[self.currentImage]
+
+        self.currentDir = Direction.RIGHT
+        self.proposedDir = Direction.RIGHT
+        
     def move(self, entity):
         match entity.currentDir:
             case Direction.LEFT:
@@ -47,7 +56,7 @@ class Pacman(Entity):
             self.move(self)
             self.transferPosToOppositeSide()
 
-    def update(self, walls):
+    def update(self, walls, screen):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
@@ -61,14 +70,15 @@ class Pacman(Entity):
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
+            self.drawPacman(screen)
 
-    def drawPacman(self, screen, images):
+    def drawPacman(self, screen):
         counter = 0
         if self.currentDir == Direction.UP:
-            screen.blit(pygame.transform.rotate(images[counter // 5], 90), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.rotate(self.images[counter // 5], 90), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.DOWN:
-            screen.blit(pygame.transform.rotate(images[counter // 5], 270), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.rotate(self.images[counter // 5], 270), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.LEFT:
-            screen.blit(pygame.transform.flip(images[counter // 5], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(pygame.transform.flip(self.images[counter // 5], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
         elif self.currentDir == Direction.RIGHT:
-            screen.blit(images[counter // 5], (self.rect.centerx - 25, self.rect.centery - 25))
+            screen.blit(self.images[counter // 5], (self.rect.centerx - 25, self.rect.centery - 25))
