@@ -8,14 +8,7 @@ screen = pygame.display.set_mode(SCREENSIZE)
 pygame.display.set_caption("Pacman")
 clock = pygame.time.Clock()
 
-pacmanImages = []
-for i in range(1, 5):
-    pacmanImages.append(
-        pygame.transform.scale(
-            pygame.image.load(f"assets/pacman_images/{i}.png"), (50, 50)
-        )
-    )
-pacman = Pacman(50, 50, 75, 75, pacmanImages)
+pacman = Pacman(50, 50, 75, 75, False)
 
 wallGroup = pygame.sprite.Group()
 prepareMap(wallGroup)

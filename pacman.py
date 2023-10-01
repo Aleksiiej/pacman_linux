@@ -3,17 +3,22 @@ from globalValues import *
 
 
 class Pacman(pygame.sprite.Sprite):
-    def __init__(self, width, height, posX, posY, images):
+    def __init__(self, width, height, posX, posY, isCheckbox=True):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
-
-        self.currentImageIdx = 0
-        self.images = images
-        self.image = self.images[self.currentImageIdx]
-        self.animationCounter = 0
-
+        self.images = []
+        if isCheckbox == False:
+            for i in range(1, 5):
+                self.images.append(
+                    pygame.transform.scale(
+                        pygame.image.load(f"assets/pacman_images/{i}.png"), (50, 50)
+                    )
+                )
+            self.currentImageIdx = 0
+            self.image = self.images[self.currentImageIdx]
+            self.animationCounter = 0
         self.currentDir = Direction.RIGHT
         self.proposedDir = Direction.RIGHT
 
@@ -34,7 +39,6 @@ class Pacman(pygame.sprite.Sprite):
             self.image.get_height(),
             self.rect.centerx,
             self.rect.centery,
-            BLACK,
         )
         ret.currentDir, ret.proposedDir = self.currentDir, self.proposedDir
         return ret
