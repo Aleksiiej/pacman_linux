@@ -8,8 +8,8 @@ class Pacman(pygame.sprite.Sprite):
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
-        self.images = []
         if isCheckbox == False:
+            self.images = []
             for i in range(1, 5):
                 self.images.append(
                     pygame.transform.scale(
