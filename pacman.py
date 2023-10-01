@@ -9,13 +9,14 @@ class Pacman(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
 
-        self.currentImage = 0
+        self.currentImageIdx = 0
         self.images = images
-        self.image = self.images[self.currentImage]
+        self.image = self.images[self.currentImageIdx]
+        self.animationCounter = 0
 
         self.currentDir = Direction.RIGHT
         self.proposedDir = Direction.RIGHT
-        
+
     def move(self, entity):
         match entity.currentDir:
             case Direction.LEFT:
@@ -43,14 +44,14 @@ class Pacman(pygame.sprite.Sprite):
             if checkbox.rect.colliderect(wall):
                 return True
         return False
-    
+
     def transferPosToOppositeSide(self):
-        if(self.rect.centerx < 0):
+        if self.rect.centerx < 0:
             self.rect.centerx = 950
-        if(self.rect.centerx > 950):
+        if self.rect.centerx > 950:
             self.rect.centerx = 0
 
-    def moveForward(self, checkbox, walls):
+    def checkMoveForward(self, checkbox, walls):
         self.move(checkbox)
         if not self.checkCollisionWithWalls(checkbox, walls):
             self.move(self)
@@ -60,32 +61,54 @@ class Pacman(pygame.sprite.Sprite):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
-                self.moveForward(checkbox, walls)
+                self.checkMoveForward(checkbox, walls)
             else:
                 checkbox.currentDir = checkbox.proposedDir
                 self.move(checkbox)
                 if self.checkCollisionWithWalls(checkbox, walls):
                     checkbox = self.createCheckbox()
-                    self.moveForward(checkbox, walls)
+                    self.checkMoveForward(checkbox, walls)
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
         self.drawPacman(screen)
 
     def drawPacman(self, screen):
-        self.image = self.images[self.currentImage]
+        self.image = self.images[self.currentImageIdx]
 
-        if self.currentDir == Direction.UP:
-            screen.blit(pygame.transform.rotate(self.images[self.currentImage], 90), (self.rect.centerx - 25, self.rect.centery - 25))
-        elif self.currentDir == Direction.DOWN:
-            screen.blit(pygame.transform.rotate(self.images[self.currentImage], 270), (self.rect.centerx - 25, self.rect.centery - 25))
-        elif self.currentDir == Direction.LEFT:
-            screen.blit(pygame.transform.flip(self.images[self.currentImage], True, False), (self.rect.centerx - 25, self.rect.centery - 25))
-        elif self.currentDir == Direction.RIGHT:
-            screen.blit(self.images[self.currentImage], (self.rect.centerx - 25, self.rect.centery - 25))
+        match self.currentDir:
+            case Direction.UP:
+                screen.blit(
+                    pygame.transform.rotate(self.images[self.currentImageIdx], 90),
+                    (self.rect.centerx - 25, self.rect.centery - 25),
+                )
+            case Direction.DOWN:
+                screen.blit(
+                    pygame.transform.rotate(self.images[self.currentImageIdx], 270),
+                    (self.rect.centerx - 25, self.rect.centery - 25),
+                )
+            case Direction.LEFT:
+                screen.blit(
+                    pygame.transform.flip(
+                        self.images[self.currentImageIdx], True, False
+                    ),
+                    (self.rect.centerx - 25, self.rect.centery - 25),
+                )
+            case Direction.RIGHT:
+                screen.blit(
+                    self.images[self.currentImageIdx],
+                    (self.rect.centerx - 25, self.rect.centery - 25),
+                )
 
-        self.currentImage += 1
-        if self.currentImage >= len(self.images):
-            self.currentImage = 0
-        
+        self.animationCounter += 1
 
+        match self.animationCounter:
+            case 0:
+                self.currentImageIdx = 0
+            case 7:
+                self.currentImageIdx = 1
+            case 14:
+                self.currentImageIdx = 2
+            case 21:
+                self.currentImageIdx = 3
+                self.animationCounter = 0
