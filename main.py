@@ -1,6 +1,7 @@
 import pygame
 from globalValues import *
 from pacman import Pacman
+from apple import Apple
 from map import prepareMap
 
 pygame.init()
@@ -12,6 +13,8 @@ pacman = Pacman(50, 50, 75, 75, False)
 
 wallGroup = pygame.sprite.Group()
 prepareMap(wallGroup)
+
+dot = Apple(10, 10, 75, 125)
 
 run = True
 while run:
@@ -36,6 +39,7 @@ while run:
 
     pacman.update(wallGroup, screen)
     wallGroup.draw(screen)
+    dot.update(screen)
     pygame.display.flip()
 
 pygame.quit()
