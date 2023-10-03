@@ -42,7 +42,7 @@ while run:
     pacman.update(wallGroup, screen)
     wallGroup.draw(screen)
     for apple in appleGroup:
-        if apple.rect.colliderect(pacman):
+        if apple.rect.colliderect(pacman): # only one collision per FPS possible
             appleGroup.remove(apple)
         else:
             apple.update(screen)
