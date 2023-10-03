@@ -14,7 +14,7 @@ class Apple(pygame.sprite.Sprite):
         self.rect.center = [posX, posY]
 
     def update(self, screen):
-        screen.blit(
-            self.image,
-            (self.rect.centerx - 10, self.rect.centery - 10),
-        )
+            screen.blit(
+                self.image,
+                (self.rect.centerx - 10, self.rect.centery - 10),
+            )

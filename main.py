@@ -12,9 +12,11 @@ clock = pygame.time.Clock()
 pacman = Pacman(50, 50, 75, 75, False)
 
 wallGroup = pygame.sprite.Group()
-prepareMap(wallGroup)
+appleGroup = pygame.sprite.Group()
+prepareMap(wallGroup, appleGroup)
 
-apple = Apple(10, 10, 75, 125)
+appleList = []
+appleList.append(Apple(20, 20, 75, 125))
 
 run = True
 while run:
@@ -39,7 +41,11 @@ while run:
 
     pacman.update(wallGroup, screen)
     wallGroup.draw(screen)
-    apple.update(screen)
+    for apple in appleGroup:
+        if apple.rect.colliderect(pacman):
+            appleGroup.remove(apple)
+        else:
+            apple.update(screen)
     pygame.display.flip()
 
 pygame.quit()
