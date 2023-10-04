@@ -35,7 +35,7 @@ while run:
                 case pygame.K_ESCAPE:
                     run = False
 
-    pacman.update(wallGroup, screen)
+    pacman.update(wallGroup)
 
     pacman.draw(screen)
     wallGroup.draw(screen)

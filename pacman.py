@@ -61,7 +61,7 @@ class Pacman(pygame.sprite.Sprite):
             self.move(self)
             self.transferPosToOppositeSide()
 
-    def update(self, walls, screen):
+    def update(self, walls):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
             if self.currentDir == self.proposedDir:
@@ -77,8 +77,6 @@ class Pacman(pygame.sprite.Sprite):
                     self.move(self)
 
     def draw(self, screen):
-        self.image = self.images[self.currentImageIdx]
-
         match self.currentDir:
             case Direction.UP:
                 screen.blit(

@@ -7,10 +7,9 @@ class Apple(pygame.sprite.Sprite):
         pygame.image.load("assets/dot_images/apple.png"), (20, 20)
     )
 
-    def __init__(self, width, height, posX, posY):
+    def __init__(self, posX, posY):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([width, height])
-        self.rect = self.image.get_rect()
+        self.rect = Apple.image.get_rect()
         self.rect.center = [posX, posY]
 
     def draw(self, screen):
