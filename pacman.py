@@ -75,9 +75,8 @@ class Pacman(pygame.sprite.Sprite):
                 else:
                     self.currentDir = self.proposedDir
                     self.move(self)
-        self.drawPacman(screen)
 
-    def drawPacman(self, screen):
+    def draw(self, screen):
         self.image = self.images[self.currentImageIdx]
 
         match self.currentDir:

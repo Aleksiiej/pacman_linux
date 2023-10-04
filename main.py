@@ -37,12 +37,14 @@ while run:
                     run = False
 
     pacman.update(wallGroup, screen)
+
+    pacman.draw(screen)
     wallGroup.draw(screen)
     for apple in appleGroup:
         if apple.rect.colliderect(pacman): # only one collision per FPS possible
             appleGroup.remove(apple)
         else:
-            apple.update(screen)
+            apple.draw(screen)
     pygame.display.flip()
 
 pygame.quit()
