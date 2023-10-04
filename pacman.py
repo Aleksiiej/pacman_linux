@@ -35,8 +35,8 @@ class Pacman(pygame.sprite.Sprite):
 
     def createCheckbox(self):
         ret = Pacman(
-            self.image.get_width(),
-            self.image.get_height(),
+            self.rect.width,
+            self.rect.height,
             self.rect.centerx,
             self.rect.centery,
         )
