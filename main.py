@@ -1,7 +1,6 @@
 import pygame
 from globalValues import *
 from pacman import Pacman
-from apple import Apple
 from map import prepareMap
 
 pygame.init()

@@ -3,10 +3,9 @@ from globalValues import *
 
 
 class Apple(pygame.sprite.Sprite):
-    def __init__(self, width, height, posX, posY, color=YELLOW):
+    def __init__(self, width, height, posX, posY):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
-        self.image.fill(color)
         self.image = pygame.transform.scale(
             pygame.image.load("assets/dot_images/apple.png"), (20, 20)
         )
