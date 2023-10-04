@@ -15,9 +15,6 @@ wallGroup = pygame.sprite.Group()
 appleGroup = pygame.sprite.Group()
 prepareMap(wallGroup, appleGroup)
 
-appleList = []
-appleList.append(Apple(20, 20, 75, 125))
-
 run = True
 while run:
     clock.tick(FPS)
