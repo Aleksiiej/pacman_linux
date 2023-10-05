@@ -1,5 +1,4 @@
 import pygame
-from globalValues import *
 
 
 class Apple(pygame.sprite.Sprite):
