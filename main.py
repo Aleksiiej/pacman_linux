@@ -3,6 +3,7 @@ from globalValues import *
 from pacman import Pacman
 from map import prepareMap
 from drawFacade import DrawFacade
+from scoreCounter import ScoreCounter
 
 pygame.init()
 screen = pygame.display.set_mode(SCREENSIZE)
@@ -40,6 +41,9 @@ while run:
     for apple in appleGroup:
         if apple.rect.colliderect(pacman):  # only one collision per FPS possible
             appleGroup.remove(apple)
+            if len(appleGroup) == 0:
+                run = False
+            ScoreCounter.incrementScore()
             break
 
     drawFacade.drawGame()
