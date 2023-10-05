@@ -2,6 +2,7 @@ import pygame
 from globalValues import *
 from pacman import Pacman
 from map import prepareMap
+from gameDrawer import DrawFacade
 
 pygame.init()
 screen = pygame.display.set_mode(SCREENSIZE)
@@ -9,10 +10,10 @@ pygame.display.set_caption("Pacman")
 clock = pygame.time.Clock()
 
 pacman = Pacman(50, 50, 75, 75, False)
-
 wallGroup = pygame.sprite.Group()
 appleGroup = pygame.sprite.Group()
 prepareMap(wallGroup, appleGroup)
+drawFacade = DrawFacade(screen, pacman, wallGroup, appleGroup, pygame)
 
 run = True
 while run:
@@ -36,14 +37,11 @@ while run:
                     run = False
 
     pacman.update(wallGroup)
-
-    pacman.draw(screen)
-    wallGroup.draw(screen)
     for apple in appleGroup:
-        if apple.rect.colliderect(pacman): # only one collision per FPS possible
+        if apple.rect.colliderect(pacman):  # only one collision per FPS possible
             appleGroup.remove(apple)
-        else:
-            apple.draw(screen)
-    pygame.display.flip()
+            break
+
+    drawFacade.drawGame()
 
 pygame.quit()
