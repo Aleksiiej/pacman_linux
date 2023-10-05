@@ -2,7 +2,7 @@ import pygame
 from globalValues import *
 from pacman import Pacman
 from map import prepareMap
-from gameDrawer import DrawFacade
+from drawFacade import DrawFacade
 
 pygame.init()
 screen = pygame.display.set_mode(SCREENSIZE)
