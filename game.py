@@ -1,6 +1,7 @@
 import pygame
 from globalValues import *
 from pacman import Pacman
+from ghost import Ghost
 from scoreCounter import ScoreCounter
 from map import prepareMap
 
@@ -13,6 +14,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.pacman = Pacman(50, 50, 75, 75, False)
+        self.ghost = Ghost(50, 50, 525, 475, False)
         self.wallGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup)
@@ -51,6 +53,7 @@ class Game:
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
         self.appleGroup.draw(self.screen)
+        self.ghost.draw(self.screen)
         pygame.display.flip()
 
     def run(self):
