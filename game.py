@@ -40,6 +40,7 @@ class Game:
 
     def update(self):
         self.pacman.update(self.wallGroup)
+        self.ghost.update(self.wallGroup, self.pacman)
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
