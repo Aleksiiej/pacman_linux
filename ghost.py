@@ -20,13 +20,13 @@ class Ghost(pygame.sprite.Sprite):
     def move(self, entity):
         match entity.currentDir:
             case Direction.LEFT:
-                entity.rect.x -= 1
+                entity.rect.centerx -= 1
             case Direction.RIGHT:
-                entity.rect.x += 1
+                entity.rect.centerx += 1
             case Direction.UP:
-                entity.rect.y -= 1
+                entity.rect.centery -= 1
             case Direction.DOWN:
-                entity.rect.y += 1
+                entity.rect.centery += 1
 
     def moveCheckbox(self, entity):
         match entity.currentDir:
@@ -57,7 +57,7 @@ class Ghost(pygame.sprite.Sprite):
     def calculateDistance(self, pacman, checkbox) -> float:
         return hypot(
             pacman.rect.centerx - checkbox.rect.centerx,
-            pacman.rect.centery - checkbox.rect.centerx,
+            pacman.rect.centery - checkbox.rect.centery,
         )
 
     def update(self, walls, pacman):
@@ -65,7 +65,6 @@ class Ghost(pygame.sprite.Sprite):
 
         for _ in range(VELOCITY):
             possibleDirections = {}
-            print(self.currentDir)
             for dir in DIRECTION_LIST:
                 checkbox = self.createCheckbox()
                 checkbox.currentDir = dir
@@ -76,7 +75,6 @@ class Ghost(pygame.sprite.Sprite):
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
 
-            print(possibleDirections)
             if self.ghostState == GhostStates.InBox and len(possibleDirections) == 2:
                 self.currentDir = Direction.UP
                 self.restrictedDir = Direction.DOWN
