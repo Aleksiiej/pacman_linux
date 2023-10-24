@@ -81,7 +81,7 @@ class Ghost(pygame.sprite.Sprite):
                 self.currentDir = Direction.UP
                 self.restrictedDir = Direction.DOWN
                 self.ghostState = GhostStates.Chasing
-            elif len(possibleDirections) > 1:
+            elif len(possibleDirections) > 0:
                 self.currentDir = min(possibleDirections, key=possibleDirections.get)
 
             match self.currentDir:
