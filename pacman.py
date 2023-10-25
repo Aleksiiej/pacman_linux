@@ -5,10 +5,7 @@ from globalValues import *
 
 class Pacman(Entity):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.rect = self.image.get_rect()
-        self.rect.center = [posX, posY]
+        super().__init__(width, height, posX, posY)
         if isCheckbox == False:
             self.images = []
             for i in range(1, 5):
@@ -23,17 +20,6 @@ class Pacman(Entity):
         self.currentDir = Direction.RIGHT
         self.proposedDir = Direction.RIGHT
 
-    def move(self, entity):
-        match entity.currentDir:
-            case Direction.LEFT:
-                entity.rect.x -= 1
-            case Direction.RIGHT:
-                entity.rect.x += 1
-            case Direction.UP:
-                entity.rect.y -= 1
-            case Direction.DOWN:
-                entity.rect.y += 1
-
     def createCheckbox(self):
         ret = Pacman(
             self.rect.width,
@@ -43,18 +29,6 @@ class Pacman(Entity):
         )
         ret.currentDir, ret.proposedDir = self.currentDir, self.proposedDir
         return ret
-
-    def checkCollisionWithWalls(self, checkbox, walls):
-        for wall in walls:
-            if checkbox.rect.colliderect(wall):
-                return True
-        return False
-
-    def transferPosToOppositeSide(self):
-        if self.rect.centerx < 0:
-            self.rect.centerx = 950
-        if self.rect.centerx > 950:
-            self.rect.centerx = 0
 
     def checkMoveForward(self, checkbox, walls):
         self.move(checkbox)
