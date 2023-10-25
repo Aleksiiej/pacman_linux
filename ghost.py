@@ -1,11 +1,12 @@
 import pygame
+from entity import Entity
 from math import hypot
 from globalValues import *
 
 
-class Ghost(pygame.sprite.Sprite):
+class Ghost(Entity):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]

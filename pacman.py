@@ -1,10 +1,11 @@
 import pygame
+from entity import Entity
 from globalValues import *
 
 
-class Pacman(pygame.sprite.Sprite):
+class Pacman(Entity):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__()
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
