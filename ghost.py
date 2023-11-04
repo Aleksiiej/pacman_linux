@@ -56,20 +56,5 @@ class Ghost(Entity):
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
 
-    def update(self, walls, pacman):
-        for _ in range(VELOCITY):
-            possibleDirections = self.createListWithPossibleDirections(pacman, walls)
-
-            if self.ghostState == GhostStates.InBox and len(possibleDirections) == 2:
-                self.currentDir = Direction.UP
-                self.restrictedDir = Direction.DOWN
-                self.ghostState = GhostStates.Chasing
-            elif len(possibleDirections) > 0:
-                self.currentDir = min(possibleDirections, key=possibleDirections.get)
-
-            self.setRestrictedDir()
-            self.move(self)
-            self.transferPosToOppositeSide()
-
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
