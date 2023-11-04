@@ -2,6 +2,7 @@ import pygame
 from globalValues import *
 from pacman import Pacman
 from ghost import Ghost
+from blinky import Blinky
 from scoreCounter import ScoreCounter
 from map import prepareMap
 
@@ -14,7 +15,7 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.pacman = Pacman(50, 50, 75, 75, False)
-        self.ghost = Ghost(50, 50, 525, 475, False)
+        self.blinky = Blinky(50, 50, 475, 400, False)
         self.wallGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup)
@@ -40,7 +41,7 @@ class Game:
 
     def update(self):
         self.pacman.update(self.wallGroup)
-        self.ghost.update(self.wallGroup, self.pacman)
+        self.blinky.update(self.wallGroup, self.pacman)
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
@@ -54,7 +55,7 @@ class Game:
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
         self.appleGroup.draw(self.screen)
-        self.ghost.draw(self.screen)
+        self.blinky.draw(self.screen)
         pygame.display.flip()
 
     def run(self):

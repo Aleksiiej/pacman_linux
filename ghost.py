@@ -5,15 +5,8 @@ from globalValues import *
 
 
 class Ghost(Entity):
-    def __init__(self, width, height, posX, posY, isCheckbox=True):
+    def __init__(self, width, height, posX, posY):
         super().__init__(width, height, posX, posY)
-        if isCheckbox == False:
-            self.image = pygame.transform.scale(
-                pygame.image.load(f"assets/ghost_images/blue.png"), (50, 50)
-            )
-        self.currentDir = Direction.RIGHT
-        self.restrictedDir = Direction.RIGHT
-        self.ghostState = GhostStates.InBox
 
     def moveCheckbox(self, entity):
         match entity.currentDir:
