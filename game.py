@@ -16,6 +16,8 @@ class Game:
 
         self.pacman = Pacman(50, 50, 75, 75, False)
         self.blinky = Blinky(50, 50, 475, 400, False)
+        self.ghostGroup = pygame.sprite.Group()
+        self.ghostGroup.add(self.blinky)
         self.wallGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup)
@@ -49,6 +51,9 @@ class Game:
                     self.running = False
                 ScoreCounter.incrementScore()
                 break
+        for ghost in self.ghostGroup:
+            if ghost.rect.colliderect(self.pacman):
+                self.running = False
 
     def render(self):
         self.screen.fill(BLACK)

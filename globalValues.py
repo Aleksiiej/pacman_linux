@@ -4,7 +4,7 @@ SCREENSIZE = (950, 1050)
 
 FPS = 60
 
-VELOCITY = 4
+VELOCITY = 3
 
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
