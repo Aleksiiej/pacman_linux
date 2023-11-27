@@ -4,6 +4,8 @@
 ## Project Overview
 This project is a homage to the classic arcade game Pacman, recreated using Python and the Pygame library. The primary focus of this project was to enhance my skills in Python programming and gain practical experience with the Pygame graphics library.
 
+![Screenshot from 2023-11-27 15-05-05](https://github.com/Aleksiiej/pacman_linux/assets/94867075/9467820e-71e3-4adc-b2c5-bb20cbd98558)
+
 ## Key Features:
 - Object-Oriented Design: Fully implemented using Python’s object-oriented programming capabilities, ensuring a structured and scalable codebase.
 - Pygame Integration: Utilizes the Pygame library for rendering graphics, managing game states, and handling user inputs.
