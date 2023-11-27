@@ -15,6 +15,7 @@ This project is a homage to the classic arcade game Pacman, recreated using Pyth
 ## Technical Stack:
 - Language: Python
 - Graphics Library: Pygame
+- Development Tool: Visual Studio Code
 - Platform: Linux
 
 ## Project Goals:
