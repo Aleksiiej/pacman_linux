@@ -1,6 +1,6 @@
 from enum import Enum
 
-SCREENSIZE = (950, 1050)
+SCREENSIZE = (1250, 1050)
 
 FPS = 60
 
@@ -8,6 +8,7 @@ VELOCITY = 3
 
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
+RED = (255, 0, 0)
 
 
 class Direction(Enum):
@@ -18,6 +19,7 @@ class Direction(Enum):
 
 
 DIRECTION_LIST = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT}
+
 
 class GhostStates(Enum):
     InBox = 0

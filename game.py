@@ -1,15 +1,16 @@
 import pygame
 from globalValues import *
 from pacman import Pacman
-from ghost import Ghost
 from blinky import Blinky
 from scoreCounter import ScoreCounter
+from startgameText import StartgameText
 from map import prepareMap
 
 
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.font.init()
         self.screen = pygame.display.set_mode(SCREENSIZE)
         pygame.display.set_caption("Pacman")
         self.clock = pygame.time.Clock()
@@ -21,6 +22,8 @@ class Game:
         self.wallGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup)
+
+        self.startgameText = StartgameText()
 
         self.running = True
 
@@ -61,6 +64,7 @@ class Game:
         self.wallGroup.draw(self.screen)
         self.appleGroup.draw(self.screen)
         self.blinky.draw(self.screen)
+        self.startgameText.draw(self.screen)
         pygame.display.flip()
 
     def run(self):
