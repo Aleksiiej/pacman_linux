@@ -1,6 +1,16 @@
-class ScoreCounter:
-    score = 0
+import pygame
+from globalValues import *
 
-    @staticmethod
-    def incrementScore():
-        ScoreCounter.score += 1
+
+class ScoreCounter:
+    def __init__(self):
+        self.score = 0
+        self.text = pygame.font.SysFont(None, 36)
+        self.textImg = self.text.render("Score: " + str(self.score), True, RED)
+
+    def incrementScore(self):
+        self.score += 1
+        self.textImg = self.text.render("Score: " + str(self.score), True, RED)
+
+    def draw(self, screen):
+        screen.blit(self.textImg, (970, 400))

@@ -24,6 +24,7 @@ class Game:
         prepareMap(self.wallGroup, self.appleGroup)
 
         self.startgameText = StartgameText()
+        self.scoreCounter = ScoreCounter()
 
         self.running = True
 
@@ -52,7 +53,7 @@ class Game:
                 self.appleGroup.remove(apple)
                 if len(self.appleGroup) == 0:
                     self.running = False
-                ScoreCounter.incrementScore()
+                self.scoreCounter.incrementScore()
                 break
         for ghost in self.ghostGroup:
             if ghost.rect.colliderect(self.pacman):
@@ -65,6 +66,7 @@ class Game:
         self.appleGroup.draw(self.screen)
         self.blinky.draw(self.screen)
         self.startgameText.draw(self.screen)
+        self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 
     def run(self):
