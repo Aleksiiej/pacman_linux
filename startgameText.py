@@ -19,5 +19,5 @@ class StartgameText:
     def draw(self, screen):
         posY = 50
         for line in self.startgameTextImages:
-            screen.blit(line, (970, posY))
+            screen.blit(line, (780, posY))
             posY += 30

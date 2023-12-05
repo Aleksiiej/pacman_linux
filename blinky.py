@@ -8,7 +8,7 @@ class Blinky(Ghost):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
             self.image = pygame.transform.scale(
-                pygame.image.load(f"assets/ghost_images/red.png"), (50, 50)
+                pygame.image.load(f"assets/ghost_images/red.png"), (ENTITY_SIZE, ENTITY_SIZE)
             )
         self.currentDir = Direction.RIGHT
         self.restrictedDir = Direction.RIGHT

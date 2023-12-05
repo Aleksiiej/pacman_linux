@@ -11,7 +11,7 @@ class Pacman(Entity):
             for i in range(1, 5):
                 self.images.append(
                     pygame.transform.scale(
-                        pygame.image.load(f"assets/pacman_images/{i}.png"), (50, 50)
+                        pygame.image.load(f"assets/pacman_images/{i}.png"), (ENTITY_SIZE, ENTITY_SIZE)
                     )
                 )
             self.currentImageIdx = 0
@@ -65,24 +65,24 @@ class Pacman(Entity):
             case Direction.UP:
                 screen.blit(
                     pygame.transform.rotate(self.images[self.currentImageIdx], 90),
-                    (self.rect.centerx - 25, self.rect.centery - 25),
+                    (self.rect.centerx - 20, self.rect.centery - 20),
                 )
             case Direction.DOWN:
                 screen.blit(
                     pygame.transform.rotate(self.images[self.currentImageIdx], 270),
-                    (self.rect.centerx - 25, self.rect.centery - 25),
+                    (self.rect.centerx - 20, self.rect.centery - 20),
                 )
             case Direction.LEFT:
                 screen.blit(
                     pygame.transform.flip(
                         self.images[self.currentImageIdx], True, False
                     ),
-                    (self.rect.centerx - 25, self.rect.centery - 25),
+                    (self.rect.centerx - 20, self.rect.centery - 20),
                 )
             case Direction.RIGHT:
                 screen.blit(
                     self.images[self.currentImageIdx],
-                    (self.rect.centerx - 25, self.rect.centery - 25),
+                    (self.rect.centerx - 20, self.rect.centery - 20),
                 )
 
         self.animationCounter += 1

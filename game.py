@@ -15,8 +15,12 @@ class Game:
         pygame.display.set_caption("Pacman")
         self.clock = pygame.time.Clock()
 
-        self.pacman = Pacman(50, 50, 75, 75, False)
-        self.blinky = Blinky(50, 50, 475, 400, False)
+        self.pacman = Pacman(
+            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
+        )
+        self.blinky = Blinky(
+            ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False
+        )
         self.ghostGroup = pygame.sprite.Group()
         self.ghostGroup.add(self.blinky)
         self.wallGroup = pygame.sprite.Group()

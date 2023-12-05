@@ -1,9 +1,10 @@
 import pygame
+from globalValues import *
 
 
 class Apple(pygame.sprite.Sprite):
     image = pygame.transform.scale(
-        pygame.image.load("assets/dot_images/apple.png"), (20, 20)
+        pygame.image.load("assets/dot_images/apple.png"), (APPLE_SIZE, APPLE_SIZE)
     )
 
     def __init__(self, posX, posY):

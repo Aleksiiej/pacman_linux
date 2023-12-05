@@ -28,6 +28,6 @@ class Entity(pygame.sprite.Sprite):
 
     def transferPosToOppositeSide(self):
         if self.rect.centerx < 0:
-            self.rect.centerx = 950
-        if self.rect.centerx > 950:
+            self.rect.centerx = 760
+        if self.rect.centerx > 760:
             self.rect.centerx = 0

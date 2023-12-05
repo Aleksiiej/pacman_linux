@@ -13,4 +13,4 @@ class ScoreCounter:
         self.textImg = self.text.render("Score: " + str(self.score), True, RED)
 
     def draw(self, screen):
-        screen.blit(self.textImg, (970, 400))
+        screen.blit(self.textImg, (780, 400))
