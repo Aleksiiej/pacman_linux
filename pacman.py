@@ -19,6 +19,7 @@ class Pacman(Entity):
             self.animationCounter = 0
         self.currentDir = Direction.RIGHT
         self.proposedDir = Direction.RIGHT
+        self.FPSCounter = 0
 
     def createCheckbox(self):
         ret = Pacman(
@@ -39,17 +40,25 @@ class Pacman(Entity):
     def update(self, walls):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
-            if self.currentDir == self.proposedDir:
-                self.checkMoveForward(checkbox, walls)
+            if (self.FPSCounter % 5 == 0):
+                if self.FPSCounter == 60:
+                    self.FPSCounter = 0
+                self.FPSCounter += 1
             else:
-                checkbox.currentDir = checkbox.proposedDir
-                self.move(checkbox)
-                if self.checkCollisionWithWalls(checkbox, walls):
-                    checkbox = self.createCheckbox()
+                if self.currentDir == self.proposedDir:
                     self.checkMoveForward(checkbox, walls)
                 else:
-                    self.currentDir = self.proposedDir
-                    self.move(self)
+                    checkbox.currentDir = checkbox.proposedDir
+                    self.move(checkbox)
+                    if self.checkCollisionWithWalls(checkbox, walls):
+                        checkbox = self.createCheckbox()
+                        self.checkMoveForward(checkbox, walls)
+                    else:
+                        self.currentDir = self.proposedDir
+                        self.move(self)
+                if self.FPSCounter == 60:
+                    self.FPSCounter = 0
+                self.FPSCounter += 1
 
     def draw(self, screen):
         match self.currentDir:
