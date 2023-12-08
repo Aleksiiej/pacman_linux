@@ -1,4 +1,5 @@
 import pygame
+import sys
 from globalValues import *
 from pacman import Pacman
 from blinky import Blinky
@@ -69,13 +70,24 @@ class Game:
         self.wallGroup.draw(self.screen)
         self.appleGroup.draw(self.screen)
         self.blinky.draw(self.screen)
-        self.startgameText.draw(self.screen)
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 
+    def renderStartScreen(self):
+        self.startgameText.draw(self.screen)
+        self.render()
+
     def run(self):
-        while self.running:
-            self.processInput()
-            self.update()
-            self.render()
-            self.clock.tick(FPS)
+        self.render()
+        self.startgameText.draw(self.screen)
+        pygame.display.flip()
+        pygame.event.clear()
+        if pygame.event.wait().type == pygame.KEYDOWN:
+            while self.running:
+                self.processInput()
+                self.update()
+                self.render()
+                self.clock.tick(FPS)
+        else:
+            pygame.quit()
+            sys.exit()

@@ -10,7 +10,7 @@ class StartgameText:
             "INSTRUCTIONS:",
             "ARROW KEYS to control Pacman",
             "P to pause and unpause game",
-            "Click ENTER to start game",
+            "Press any key to start game...",
         ]
         self.startgameTextImages = []
         for line in self.message:
