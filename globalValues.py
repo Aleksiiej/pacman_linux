@@ -10,7 +10,7 @@ APPLE_SIZE = 15
 PACMAN_START_X = 60
 PACMAN_START_Y = 60
 BLINKY_START_X = 380
-BLINKY_START_Y = 320
+BLINKY_START_Y = 300
 
 BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
@@ -29,7 +29,9 @@ DIRECTION_LIST = {Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT}
 
 class GhostStates(Enum):
     InBox = 0
-    Chasing = 1
+    Chase = 1
+    Scatter = 2
+    Frightened = 3
 
 
 mapInit = [

@@ -1,4 +1,4 @@
-from entity import Entity
+from entities.entity import Entity
 from math import hypot
 from globalValues import *
 

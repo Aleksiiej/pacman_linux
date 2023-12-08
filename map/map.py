@@ -1,6 +1,6 @@
 from globalValues import *
-from apple import Apple
-from wall import Wall
+from map.apple import Apple
+from map.wall import Wall
 
 
 def prepareMap(wallGroup, appleGroup):

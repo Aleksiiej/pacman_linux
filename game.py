@@ -1,11 +1,11 @@
 import pygame
 import sys
 from globalValues import *
-from pacman import Pacman
-from blinky import Blinky
-from scoreCounter import ScoreCounter
-from startgameText import StartgameText
-from map import prepareMap
+from entities.pacman import Pacman
+from entities.blinky import Blinky
+from text.scoreCounter import ScoreCounter
+from text.startgameText import StartgameText
+from map.map import prepareMap
 
 
 class Game:
@@ -35,7 +35,11 @@ class Game:
 
     def processInput(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if (
+                event.type == pygame.QUIT
+                or event.type == pygame.KEYDOWN
+                and event.key == pygame.K_ESCAPE
+            ):
                 self.running = False
             if event.type == pygame.KEYDOWN:
                 match event.key:
