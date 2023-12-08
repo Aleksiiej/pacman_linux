@@ -11,7 +11,7 @@ This project is a homage to the classic arcade game Pacman, recreated using Pyth
 - Pygame Integration: Utilizes the Pygame library for rendering graphics, managing game states, and handling user inputs.
 - Classic Gameplay: Mimics the iconic Pacman gameplay, offering a nostalgic experience with a modern coding approach.
 - Linux Compatibility: Optimized for performance on Linux operating systems, ensuring smooth gameplay on a variety of Linux distributions.
-- Design Patterns: Command and Game Loop design patterns are implemented in this project
+- Design Patterns: Command, Game Loop and State Machine design patterns has been implemented in this project
 
 ## Technical Stack:
 - Language: Python
