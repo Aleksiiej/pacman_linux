@@ -5,6 +5,8 @@ from entities.pacman import Pacman
 from entities.blinky import Blinky
 from text.scoreCounter import ScoreCounter
 from text.startgameText import StartgameText
+from text.wonGameText import WonGameText
+from text.lostGameText import LostGameText
 from map.map import prepareMap
 
 
@@ -30,6 +32,8 @@ class Game:
 
         self.startgameText = StartgameText()
         self.scoreCounter = ScoreCounter()
+        self.wonGameText = WonGameText()
+        self.lostGameText = LostGameText()
 
         self.running = True
 
@@ -52,7 +56,8 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman.proposedDir = Direction.RIGHT
                     case pygame.K_ESCAPE:
-                        self.running = False
+                        pygame.quit()
+                        sys.exit()
 
     def update(self):
         self.pacman.update(self.wallGroup)
@@ -64,7 +69,7 @@ class Game:
                     self.running = False
                 self.scoreCounter.incrementScore()
                 break
-        self.running = not self.checkIfLost(self.pacman, self.ghostGroup)
+        self.running = not self.checkIfLost()
 
     def render(self):
         self.screen.fill(BLACK)
@@ -91,12 +96,14 @@ class Game:
                 self.update()
                 self.render()
                 self.clock.tick(FPS)
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
         else:
-            pygame.quit()
-            sys.exit()
+            pass
 
-    def checkIfLost(self, pacman, ghostGroup):
-        for ghost in ghostGroup:
+    def checkIfLost(self):
+        for ghost in self.ghostGroup:
             if ghost.calculateDistance(self.pacman, ghost) < 20:
                 return True
             return False

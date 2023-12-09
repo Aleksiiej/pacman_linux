@@ -2,20 +2,18 @@ import pygame
 from globalValues import *
 
 
-class StartgameText:
+class LostGameText:
     def __init__(self):
         self.text = pygame.font.SysFont(None, 24)
         self.message = [
-            "Welcome in Pacman",
-            "INSTRUCTIONS:",
-            "ARROW KEYS to control Pacman",
-            "P to pause and unpause game",
-            "Press ENTER to start game...",
-            "Or ESCAPE to exit game",
+            "You lose!"
         ]
         self.startgameTextImages = []
         for line in self.message:
             self.startgameTextImages.append(self.text.render(line, True, RED))
+
+    def updateScore(self, scoreCounter):
+        self.message.append("You score is: " + scoreCounter.score)
 
     def draw(self, screen):
         posY = 50
