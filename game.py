@@ -18,24 +18,7 @@ class Game:
         pygame.display.set_caption("Pacman")
         self.clock = pygame.time.Clock()
 
-        self.pacman = Pacman(
-            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
-        )
-        self.blinky = Blinky(
-            ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False
-        )
-        self.ghostGroup = pygame.sprite.Group()
-        self.ghostGroup.add(self.blinky)
-        self.wallGroup = pygame.sprite.Group()
-        self.appleGroup = pygame.sprite.Group()
-        prepareMap(self.wallGroup, self.appleGroup)
-
-        self.startgameText = StartgameText()
-        self.scoreCounter = ScoreCounter()
-        self.wonGameText = WonGameText()
-        self.lostGameText = LostGameText()
-
-        self.running = True
+        self.initNewGame()
 
     def processInput(self):
         for event in pygame.event.get():
@@ -62,14 +45,18 @@ class Game:
     def update(self):
         self.pacman.update(self.wallGroup)
         self.blinky.update(self.wallGroup, self.pacman)
+        self.running = not self.checkIfLost()
+        if not self.running:
+            self.gameResult = False
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
                 if len(self.appleGroup) == 0:
                     self.running = False
+                    self.gameResult = True
+                    break
                 self.scoreCounter.incrementScore()
                 break
-        self.running = not self.checkIfLost()
 
     def render(self):
         self.screen.fill(BLACK)
@@ -85,25 +72,54 @@ class Game:
         self.render()
 
     def run(self):
-        self.render()
-        self.startgameText.draw(self.screen)
-        pygame.display.flip()
-        pygame.event.clear()
-        event = pygame.event.wait()
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            while self.running:
-                self.processInput()
-                self.update()
-                self.render()
-                self.clock.tick(FPS)
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+        while True:
+            self.render()
+            self.startgameText.draw(self.screen)
+            pygame.display.flip()
+            pygame.event.clear()
+            event = pygame.event.wait()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                while self.running:
+                    self.processInput()
+                    self.update()
+                    self.render()
+                    self.clock.tick(FPS)
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
-        else:
-            pass
+            else:
+                pass
+            if self.gameResult:
+                self.wonGameText.draw(self.screen)
+            else:
+                self.lostGameText.draw(self.screen)
+            pygame.display.flip()
+            pygame.event.clear()
+            event = pygame.event.wait()
+            self.initNewGame()
 
     def checkIfLost(self):
         for ghost in self.ghostGroup:
             if ghost.calculateDistance(self.pacman, ghost) < 20:
                 return True
             return False
+
+    def initNewGame(self):
+        self.pacman = Pacman(
+            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
+        )
+        self.blinky = Blinky(
+            ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False
+        )
+        self.ghostGroup = pygame.sprite.Group()
+        self.ghostGroup.add(self.blinky)
+        self.wallGroup = pygame.sprite.Group()
+        self.appleGroup = pygame.sprite.Group()
+        prepareMap(self.wallGroup, self.appleGroup)
+
+        self.startgameText = StartgameText()
+        self.scoreCounter = ScoreCounter()
+        self.wonGameText = WonGameText()
+        self.lostGameText = LostGameText()
+        self.running = True
+        self.gameResult = False
