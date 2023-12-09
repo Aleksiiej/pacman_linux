@@ -64,9 +64,7 @@ class Game:
                     self.running = False
                 self.scoreCounter.incrementScore()
                 break
-        for ghost in self.ghostGroup:
-            if ghost.rect.colliderect(self.pacman):
-                self.running = False
+        self.running = not self.checkIfLost(self.pacman, self.ghostGroup)
 
     def render(self):
         self.screen.fill(BLACK)
@@ -86,7 +84,8 @@ class Game:
         self.startgameText.draw(self.screen)
         pygame.display.flip()
         pygame.event.clear()
-        if pygame.event.wait().type == pygame.KEYDOWN:
+        event = pygame.event.wait()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
             while self.running:
                 self.processInput()
                 self.update()
@@ -95,3 +94,9 @@ class Game:
         else:
             pygame.quit()
             sys.exit()
+
+    def checkIfLost(self, pacman, ghostGroup):
+        for ghost in ghostGroup:
+            if ghost.calculateDistance(self.pacman, ghost) < 20:
+                return True
+            return False
