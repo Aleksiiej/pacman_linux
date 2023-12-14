@@ -94,6 +94,14 @@ class Game:
                         pass
                     if not self.running:
                         self.running = True
+                        if self.gameResult:
+                            self.wonGameText.updateScore(self.scoreCounter)
+                            self.wonGameText.draw(self.screen)
+                        else:
+                            self.lostGameText.updateScore(self.scoreCounter)
+                            self.lostGameText.draw(self.screen)
+                        pygame.display.flip()
+                        pygame.event.wait()
                         self.initNewGame()
                         break
 

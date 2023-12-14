@@ -8,13 +8,15 @@ class MainMenuText:
         self.message = [
             "1. Start Game",
             "2. Exit Program",
+            "To navigate choose number",
+            "on keyboard",
         ]
-        self.startgameTextImages = []
+        self.mainMenuTextImages = []
         for line in self.message:
-            self.startgameTextImages.append(self.text.render(line, True, RED))
+            self.mainMenuTextImages.append(self.text.render(line, True, RED))
 
     def draw(self, screen):
         posY = 50
-        for line in self.startgameTextImages:
+        for line in self.mainMenuTextImages:
             screen.blit(line, (780, posY))
             posY += 30
