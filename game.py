@@ -7,6 +7,7 @@ from text.scoreCounter import ScoreCounter
 from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
 from text.lostGameText import LostGameText
+from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 
 
@@ -17,7 +18,7 @@ class Game:
         self.screen = pygame.display.set_mode(SCREENSIZE)
         pygame.display.set_caption("Pacman")
         self.clock = pygame.time.Clock()
-
+        self.mainMenuText = MainMenuText()
         self.initNewGame()
 
     def processInput(self):
@@ -70,29 +71,37 @@ class Game:
     def run(self):
         while True:
             self.render()
-            self.startgameText.draw(self.screen)
+            self.mainMenuText.draw(self.screen)
             pygame.display.flip()
-            pygame.event.clear()
             event = pygame.event.wait()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                while self.running:
-                    self.processInput()
-                    self.update()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                while True:
                     self.render()
-                    self.clock.tick(FPS)
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    self.startgameText.draw(self.screen)
+                    pygame.display.flip()
+                    pygame.event.clear()
+                    event = pygame.event.wait()
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                        while self.running:
+                            self.processInput()
+                            self.update()
+                            self.render()
+                            self.clock.tick(FPS)
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    else:
+                        pass
+                    if not self.running:
+                        self.running = True
+                        self.initNewGame()
+                        break
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
                 pygame.quit()
                 sys.exit()
             else:
                 pass
-            if self.gameResult:
-                self.wonGameText.draw(self.screen)
-            else:
-                self.lostGameText.draw(self.screen)
-            pygame.display.flip()
-            pygame.event.clear()
-            event = pygame.event.wait()
-            self.initNewGame()
 
     def checkIfLost(self):
         for ghost in self.ghostGroup:
