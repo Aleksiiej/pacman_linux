@@ -67,10 +67,6 @@ class Game:
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 
-    def renderStartScreen(self):
-        self.startgameText.draw(self.screen)
-        self.render()
-
     def run(self):
         while True:
             self.render()
