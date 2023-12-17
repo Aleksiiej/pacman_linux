@@ -21,6 +21,36 @@ class Game:
         self.mainMenuText = MainMenuText()
         self.initNewGame()
 
+    def run(self):
+        while True:
+            self.showMainMenuText()
+
+            event = pygame.event.wait()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+                while True:
+                    self.showStartGameText()
+
+                    event = pygame.event.wait()
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                        self.mainGameLoop()
+                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    else:
+                        pass
+
+                    if not self.running:
+                        self.showEndgameText()
+                        pygame.event.wait()
+                        self.initNewGame()
+                        break
+
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
+                pygame.quit()
+                sys.exit()
+            else:
+                pass
+
     def processInput(self):
         for event in pygame.event.get():
             if (
@@ -68,54 +98,37 @@ class Game:
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 
-    def run(self):
-        while True:
+    def mainGameLoop(self):
+        while self.running:
+            self.processInput()
+            self.update()
             self.render()
-            self.mainMenuText.draw(self.screen)
-            pygame.display.flip()
-            event = pygame.event.wait()
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-                while True:
-                    self.render()
-                    self.startgameText.draw(self.screen)
-                    pygame.display.flip()
-                    pygame.event.clear()
-                    event = pygame.event.wait()
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        while self.running:
-                            self.processInput()
-                            self.update()
-                            self.render()
-                            self.clock.tick(FPS)
-                    elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                        pygame.quit()
-                        sys.exit()
-                    else:
-                        pass
-                    if not self.running:
-                        self.running = True
-                        if self.gameResult:
-                            self.wonGameText.updateScore(self.scoreCounter)
-                            self.wonGameText.draw(self.screen)
-                        else:
-                            self.lostGameText.updateScore(self.scoreCounter)
-                            self.lostGameText.draw(self.screen)
-                        pygame.display.flip()
-                        pygame.event.wait()
-                        self.initNewGame()
-                        break
-
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_2:
-                pygame.quit()
-                sys.exit()
-            else:
-                pass
+            self.clock.tick(FPS)
 
     def checkIfLost(self):
         for ghost in self.ghostGroup:
             if ghost.calculateDistance(self.pacman, ghost) < 20:
                 return True
             return False
+
+    def showMainMenuText(self):
+        self.render()
+        self.mainMenuText.draw(self.screen)
+        pygame.display.flip()
+
+    def showStartGameText(self):
+        self.render()
+        self.startgameText.draw(self.screen)
+        pygame.display.flip()
+
+    def showEndgameText(self):
+        if self.gameResult:
+            self.wonGameText.updateScore(self.scoreCounter)
+            self.wonGameText.draw(self.screen)
+        else:
+            self.lostGameText.updateScore(self.scoreCounter)
+            self.lostGameText.draw(self.screen)
+        pygame.display.flip()
 
     def initNewGame(self):
         self.pacman = Pacman(
