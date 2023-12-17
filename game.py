@@ -94,6 +94,7 @@ class Game:
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
         self.appleGroup.draw(self.screen)
+        self.powerUpGroup.draw(self.screen)
         self.blinky.draw(self.screen)
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
@@ -141,7 +142,8 @@ class Game:
         self.ghostGroup.add(self.blinky)
         self.wallGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
-        prepareMap(self.wallGroup, self.appleGroup)
+        self.powerUpGroup = pygame.sprite.Group()
+        prepareMap(self.wallGroup, self.appleGroup, self.powerUpGroup)
 
         self.startgameText = StartgameText()
         self.scoreCounter = ScoreCounter()

@@ -1,9 +1,10 @@
 from globalValues import *
-from map.apple import Apple
 from map.wall import Wall
+from map.apple import Apple
+from map.powerUp import PowerUp
 
 
-def prepareMap(wallGroup, appleGroup):
+def prepareMap(wallGroup, appleGroup, powerUpGroup):
     x = 0
     y = 0
     for row in mapInit:
@@ -21,6 +22,13 @@ def prepareMap(wallGroup, appleGroup):
             elif el == 2:
                 appleGroup.add(
                     Apple(
+                        ENTITY_SIZE / 2 + x * ENTITY_SIZE,
+                        ENTITY_SIZE / 2 + y * ENTITY_SIZE,
+                    )
+                )
+            elif el == 3:
+                powerUpGroup.add(
+                    PowerUp(
                         ENTITY_SIZE / 2 + x * ENTITY_SIZE,
                         ENTITY_SIZE / 2 + y * ENTITY_SIZE,
                     )
