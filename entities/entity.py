@@ -8,6 +8,7 @@ class Entity(pygame.sprite.Sprite):
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
+        self.currentDir = Direction.RIGHT
 
     def move(self, entity):
         match entity.currentDir:

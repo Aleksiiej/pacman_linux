@@ -32,7 +32,7 @@ class Game:
 
                     event = pygame.event.wait()
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        self.mainGameLoop()
+                        self.gameLoop()
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
@@ -79,6 +79,13 @@ class Game:
         self.running = not self.checkIfLost()
         if not self.running:
             self.gameResult = False
+        for powerUp in self.powerUpGroup:
+            if powerUp.rect.colliderect(self.pacman):
+                # TODO: implemented changes for state machine
+                # self.blinky.ghostState == GhostStates.Frightened
+                # self.scoreCounter.score += 4
+                # self.scoreCounter.incrementScore()
+                pass
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
@@ -99,7 +106,7 @@ class Game:
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 
-    def mainGameLoop(self):
+    def gameLoop(self):
         while self.running:
             self.processInput()
             self.update()
@@ -108,7 +115,10 @@ class Game:
 
     def checkIfLost(self):
         for ghost in self.ghostGroup:
-            if ghost.calculateDistance(self.pacman, ghost) < 20:
+            if (
+                ghost.calculateDistance(self.pacman, ghost) < 20
+                and ghost.ghostState != GhostStates.Frightened
+            ):
                 return True
             return False
 

@@ -6,6 +6,7 @@ from globalValues import *
 class Ghost(Entity):
     def __init__(self, width, height, posX, posY):
         super().__init__(width, height, posX, posY)
+        self.ghostState = GhostStates.Chase
 
     def moveCheckbox(self, entity):
         match entity.currentDir:
@@ -54,6 +55,11 @@ class Ghost(Entity):
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
+
+    def updateFPSCounter(self):
+        if self.FPSCounter == 60:
+            self.FPSCounter = 0
+        self.FPSCounter += 1
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))

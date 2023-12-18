@@ -7,17 +7,16 @@ class Pacman(Entity):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
-            self.images = []
-            for i in range(1, 5):
-                self.images.append(
-                    pygame.transform.scale(
-                        pygame.image.load(f"assets/pacman_images/{i}.png"), (ENTITY_SIZE, ENTITY_SIZE)
-                    )
+            self.images = [
+                pygame.transform.scale(
+                    pygame.image.load(f"assets/pacman_images/{i}.png"),
+                    (ENTITY_SIZE, ENTITY_SIZE),
                 )
+                for i in range(1, 5)
+            ]
             self.currentImageIdx = 0
             self.image = self.images[self.currentImageIdx]
             self.animationCounter = 0
-        self.currentDir = Direction.RIGHT
         self.proposedDir = Direction.RIGHT
         self.FPSCounter = 0
 
@@ -40,10 +39,8 @@ class Pacman(Entity):
     def update(self, walls):
         checkbox = self.createCheckbox()
         for _ in range(VELOCITY):
-            if (self.FPSCounter % 5 == 0):
-                if self.FPSCounter == 60:
-                    self.FPSCounter = 0
-                self.FPSCounter += 1
+            if self.FPSCounter % 5 == 0:
+                self.updateFPSCounter()
             else:
                 if self.currentDir == self.proposedDir:
                     self.checkMoveForward(checkbox, walls)
@@ -56,9 +53,12 @@ class Pacman(Entity):
                     else:
                         self.currentDir = self.proposedDir
                         self.move(self)
-                if self.FPSCounter == 60:
-                    self.FPSCounter = 0
-                self.FPSCounter += 1
+                self.updateFPSCounter()
+
+    def updateFPSCounter(self):
+        if self.FPSCounter == 60:
+            self.FPSCounter = 0
+        self.FPSCounter += 1
 
     def draw(self, screen):
         match self.currentDir:

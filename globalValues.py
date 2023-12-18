@@ -33,6 +33,7 @@ class GhostStates(Enum):
     Chase = 1
     Scatter = 2
     Frightened = 3
+    Eaten = 4
 
 
 mapInit = [
