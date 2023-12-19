@@ -74,18 +74,32 @@ class Game:
                         sys.exit()
 
     def update(self):
+        self.scatterTime = pygame.time.get_ticks() + self.scatterTime
+        print(self.scatterTime)
+
+        if self.scatterTime > 20000000 and self.blinky.ghostState == GhostStates.Chase:
+            self.scatterTime = 0 
+            self.blinky.ghostState = GhostStates.Scatter
+        elif self.scatterTime > 7000000 and self.blinky.ghostState == GhostStates.Scatter:
+            self.scatterTime = 0 
+            self.blinky.ghostState = GhostStates.Chase
+
         self.pacman.update(self.wallGroup)
         self.blinky.update(self.wallGroup, self.pacman)
         self.running = not self.checkIfLost()
         if not self.running:
             self.gameResult = False
+
         for powerUp in self.powerUpGroup:
             if powerUp.rect.colliderect(self.pacman):
                 # TODO: implemented changes for state machine
-                # self.blinky.ghostState == GhostStates.Frightened
-                # self.scoreCounter.score += 4
-                # self.scoreCounter.incrementScore()
+                # self.blinky.ghostState = GhostStates.Frightened
+                self.scoreCounter.incrementScoreBy5()
+                self.powerUpGroup.remove(powerUp)
+                if len(self.powerUpGroup) == 0:
+                    del self.powerUpGroup
                 pass
+
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
@@ -95,6 +109,7 @@ class Game:
                     break
                 self.scoreCounter.incrementScore()
                 break
+        
 
     def render(self):
         self.screen.fill(BLACK)
@@ -161,3 +176,7 @@ class Game:
         self.lostGameText = LostGameText()
         self.running = True
         self.gameResult = False
+
+        self.chaseTimer = pygame.time.Clock()
+        self.scatterTimer = pygame.time.Clock()
+        self.scatterTime = 0

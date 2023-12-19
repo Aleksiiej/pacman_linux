@@ -33,8 +33,35 @@ class Blinky(Ghost):
                         self.transferPosToOppositeSide()
                         self.updateFPSCounter()
             case GhostStates.Scatter:
+                # TODO
+                for _ in range(VELOCITY):
+                    if (self.FPSCounter % 4) == 0:
+                        self.updateFPSCounter()
+                    else:
+                        possibleDirections = self.createListWithPossibleDirections(
+                            pacman, walls
+                        )
+                        if len(possibleDirections) > 0:
+                            self.currentDir = min(
+                                possibleDirections, key=possibleDirections.get
+                            )
+                        self.setRestrictedDir()
+                        self.move(self)
+                        self.transferPosToOppositeSide()
+                        self.updateFPSCounter()
+
                 pass
             case GhostStates.Frightened:
+                # TODO
+                # swapDir = self.currentdDir
+                # self.currentDir = self.restrictedDir
+                # self.restrictedDir = swapDir
+
+                # for _ in range(VELOCITY):
+                #     if (self.FPSCounter % 4) == 0:
+                #         self.updateFPSCounter()
+
                 pass
             case GhostStates.Eaten:
+                # TODO
                 pass
