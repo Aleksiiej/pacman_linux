@@ -54,3 +54,6 @@ docs/_build/
 
 # .spec files
 *.spec
+
+# venv files
+.venv

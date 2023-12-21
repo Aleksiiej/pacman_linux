@@ -73,15 +73,17 @@ class Game:
                         pygame.quit()
                         sys.exit()
 
-    def update(self):
+    def update(self):  # TODO: Implement changes for machine state
         self.scatterTime = pygame.time.get_ticks() + self.scatterTime
-        print(self.scatterTime)
+        print(self.scatterTime)  # TODO: Delete this print
 
         if self.scatterTime > 20000000 and self.blinky.ghostState == GhostStates.Chase:
-            self.scatterTime = 0 
+            self.scatterTime = 0
             self.blinky.ghostState = GhostStates.Scatter
-        elif self.scatterTime > 7000000 and self.blinky.ghostState == GhostStates.Scatter:
-            self.scatterTime = 0 
+        elif (
+            self.scatterTime > 7000000 and self.blinky.ghostState == GhostStates.Scatter
+        ):
+            self.scatterTime = 0
             self.blinky.ghostState = GhostStates.Chase
 
         self.pacman.update(self.wallGroup)
@@ -109,7 +111,6 @@ class Game:
                     break
                 self.scoreCounter.incrementScore()
                 break
-        
 
     def render(self):
         self.screen.fill(BLACK)
@@ -131,7 +132,7 @@ class Game:
     def checkIfLost(self):
         for ghost in self.ghostGroup:
             if (
-                ghost.calculateDistance(self.pacman, ghost) < 20
+                ghost.calculateDistanceWhenChase(self.pacman, ghost) < 20
                 and ghost.ghostState != GhostStates.Frightened
             ):
                 return True

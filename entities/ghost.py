@@ -27,18 +27,17 @@ class Ghost(Entity):
             self.rect.centery,
         )
 
-    def calculateDistance(self, pacman, checkbox):
+    def calculateDistanceWhenChase(self, pacman, checkbox):
         return hypot(
             pacman.rect.centerx - checkbox.rect.centerx,
             pacman.rect.centery - checkbox.rect.centery,
         )
-    
+
     def calculateDistanceWhenScatter(self, checkbox):
         return hypot(
             760 - checkbox.rect.centerx,
             20 - checkbox.rect.centery,
         )
-    
 
     def setRestrictedDir(self):
         match self.currentDir:
@@ -58,10 +57,15 @@ class Ghost(Entity):
             checkbox.currentDir = dir
             self.moveCheckbox(checkbox)
             if not checkbox.checkCollisionWithWalls(checkbox, walls):
-                if self.ghostState == GhostStates.Chase:
-                    possibleDirections[dir] = self.calculateDistance(pacman, checkbox)
-                elif self.ghostState == GhostStates.Scatter:
-                    possibleDirections[dir] = self.calculateDistanceWhenScatter(checkbox)
+                match self.ghostState:
+                    case GhostStates.Chase:
+                        possibleDirections[dir] = self.calculateDistanceWhenChase(
+                            pacman, checkbox
+                        )
+                    case GhostStates.Scatter:
+                        possibleDirections[dir] = self.calculateDistanceWhenScatter(
+                            checkbox
+                        )
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
