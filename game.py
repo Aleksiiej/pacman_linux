@@ -3,6 +3,7 @@ import sys
 from globalValues import *
 from entities.pacman import Pacman
 from entities.blinky import Blinky
+from entities.pinky import Pinky
 from text.scoreCounter import ScoreCounter
 from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
@@ -20,6 +21,33 @@ class Game:
         self.clock = pygame.time.Clock()
         self.mainMenuText = MainMenuText()
         self.initNewGame()
+
+    def initNewGame(self):
+        self.pacman = Pacman(
+            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
+        )
+        self.ghostGroup = pygame.sprite.Group()
+        self.ghostGroup.add(
+            Blinky(ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False)
+        )
+        self.ghostGroup.add(
+            Pinky(ENTITY_SIZE, ENTITY_SIZE, PINKY_START_X, PINKY_START_Y, False)
+        )
+        self.wallGroup = pygame.sprite.Group()
+        self.appleGroup = pygame.sprite.Group()
+        self.powerUpGroup = pygame.sprite.Group()
+        prepareMap(self.wallGroup, self.appleGroup, self.powerUpGroup)
+
+        self.startgameText = StartgameText()
+        self.scoreCounter = ScoreCounter()
+        self.wonGameText = WonGameText()
+        self.lostGameText = LostGameText()
+        self.running = True
+        self.gameResult = False
+
+        self.chaseTimer = pygame.time.Clock()
+        self.scatterTimer = pygame.time.Clock()
+        self.scatterTime = 0
 
     def run(self):
         while True:
@@ -50,6 +78,13 @@ class Game:
                 sys.exit()
             else:
                 pass
+
+    def gameLoop(self):
+        while self.running:
+            self.processInput()
+            self.update()
+            self.render()
+            self.clock.tick(FPS)
 
     def processInput(self):
         for event in pygame.event.get():
@@ -87,7 +122,7 @@ class Game:
             self.blinky.ghostState = GhostStates.Chase
 
         self.pacman.update(self.wallGroup)
-        self.blinky.update(self.wallGroup, self.pacman)
+        self.ghostGroup.update(self.wallGroup, self.pacman)
         self.running = not self.checkIfLost()
         if not self.running:
             self.gameResult = False
@@ -112,23 +147,6 @@ class Game:
                 self.scoreCounter.incrementScore()
                 break
 
-    def render(self):
-        self.screen.fill(BLACK)
-        self.pacman.draw(self.screen)
-        self.wallGroup.draw(self.screen)
-        self.appleGroup.draw(self.screen)
-        self.powerUpGroup.draw(self.screen)
-        self.blinky.draw(self.screen)
-        self.scoreCounter.draw(self.screen)
-        pygame.display.flip()
-
-    def gameLoop(self):
-        while self.running:
-            self.processInput()
-            self.update()
-            self.render()
-            self.clock.tick(FPS)
-
     def checkIfLost(self):
         for ghost in self.ghostGroup:
             if (
@@ -137,6 +155,16 @@ class Game:
             ):
                 return True
             return False
+
+    def render(self):
+        self.screen.fill(BLACK)
+        self.pacman.draw(self.screen)
+        self.wallGroup.draw(self.screen)
+        self.appleGroup.draw(self.screen)
+        self.powerUpGroup.draw(self.screen)
+        self.ghostGroup.draw(self.screen)
+        self.scoreCounter.draw(self.screen)
+        pygame.display.flip()
 
     def showMainMenuText(self):
         self.render()
@@ -156,28 +184,3 @@ class Game:
             self.lostGameText.updateScore(self.scoreCounter)
             self.lostGameText.draw(self.screen)
         pygame.display.flip()
-
-    def initNewGame(self):
-        self.pacman = Pacman(
-            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
-        )
-        self.blinky = Blinky(
-            ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False
-        )
-        self.ghostGroup = pygame.sprite.Group()
-        self.ghostGroup.add(self.blinky)
-        self.wallGroup = pygame.sprite.Group()
-        self.appleGroup = pygame.sprite.Group()
-        self.powerUpGroup = pygame.sprite.Group()
-        prepareMap(self.wallGroup, self.appleGroup, self.powerUpGroup)
-
-        self.startgameText = StartgameText()
-        self.scoreCounter = ScoreCounter()
-        self.wonGameText = WonGameText()
-        self.lostGameText = LostGameText()
-        self.running = True
-        self.gameResult = False
-
-        self.chaseTimer = pygame.time.Clock()
-        self.scatterTimer = pygame.time.Clock()
-        self.scatterTime = 0

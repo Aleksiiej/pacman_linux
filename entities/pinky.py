@@ -3,18 +3,18 @@ from entities.ghost import Ghost
 from globalValues import *
 
 
-class Blinky(Ghost):
+class Pinky(Ghost):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
             self.image = pygame.transform.scale(
-                pygame.image.load(f"assets/ghost_images/red.png"),
+                pygame.image.load(f"assets/ghost_images/pink.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-        self.restrictedDir = Direction.DOWN
+        self.restrictedDir = Direction.RIGHT
         self.FPSCounter = 0
 
-    def update(self, walls, pacman):  # TODO: Refactor for this function needed
+    def update(self, walls, pacman):
         for _ in range(VELOCITY):
             if (self.FPSCounter % 4) == 0:
                 self.updateFPSCounter()
