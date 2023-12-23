@@ -8,47 +8,27 @@ class Ghost(Entity):
         super().__init__(width, height, posX, posY)
         self.ghostState = GhostStates.Chase
 
-    def moveCheckbox(self, entity):
-        match entity.currentDir:
-            case Direction.LEFT:
-                entity.rect.centerx -= 10
-            case Direction.RIGHT:
-                entity.rect.centerx += 10
-            case Direction.UP:
-                entity.rect.centery -= 10
-            case Direction.DOWN:
-                entity.rect.centery += 10
+    def update(self, walls, pacman):
+        for _ in range(VELOCITY):
+            if (self.FPSCounter % 4) == 0:
+                self.updateFPSCounter()
+            else:
+                possibleDirections = self.createListWithPossibleDirections(
+                    pacman, walls
+                )
+                if len(possibleDirections) > 0:
+                    self.currentDir = min(
+                        possibleDirections, key=possibleDirections.get
+                    )
+                self.setRestrictedDir()
+                self.move(self)
+                self.transferPosToOppositeSide()
+                self.updateFPSCounter()
 
-    def createCheckbox(self):
-        return Ghost(
-            self.rect.width,
-            self.rect.height,
-            self.rect.centerx,
-            self.rect.centery,
-        )
-
-    def calculateDistanceWhenChase(self, pacman, checkbox):
-        return hypot(
-            pacman.rect.centerx - checkbox.rect.centerx,
-            pacman.rect.centery - checkbox.rect.centery,
-        )
-
-    def calculateDistanceWhenScatter(self, checkbox):
-        return hypot(
-            760 - checkbox.rect.centerx,
-            20 - checkbox.rect.centery,
-        )
-
-    def setRestrictedDir(self):
-        match self.currentDir:
-            case Direction.UP:
-                self.restrictedDir = Direction.DOWN
-            case Direction.DOWN:
-                self.restrictedDir = Direction.UP
-            case Direction.LEFT:
-                self.restrictedDir = Direction.RIGHT
-            case Direction.RIGHT:
-                self.restrictedDir = Direction.LEFT
+    def updateFPSCounter(self):
+        if self.FPSCounter == 60:
+            self.FPSCounter = 0
+        self.FPSCounter += 1
 
     def createListWithPossibleDirections(self, pacman, walls):
         possibleDirections = {}
@@ -70,10 +50,35 @@ class Ghost(Entity):
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
 
-    def updateFPSCounter(self):
-        if self.FPSCounter == 60:
-            self.FPSCounter = 0
-        self.FPSCounter += 1
+    def createCheckbox(self):
+        return Ghost(
+            self.rect.width,
+            self.rect.height,
+            self.rect.centerx,
+            self.rect.centery,
+        )
+
+    def moveCheckbox(self, entity):
+        match entity.currentDir:
+            case Direction.LEFT:
+                entity.rect.centerx -= 10
+            case Direction.RIGHT:
+                entity.rect.centerx += 10
+            case Direction.UP:
+                entity.rect.centery -= 10
+            case Direction.DOWN:
+                entity.rect.centery += 10
+
+    def setRestrictedDir(self):
+        match self.currentDir:
+            case Direction.UP:
+                self.restrictedDir = Direction.DOWN
+            case Direction.DOWN:
+                self.restrictedDir = Direction.UP
+            case Direction.LEFT:
+                self.restrictedDir = Direction.RIGHT
+            case Direction.RIGHT:
+                self.restrictedDir = Direction.LEFT
 
     def draw(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))

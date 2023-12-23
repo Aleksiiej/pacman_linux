@@ -112,14 +112,20 @@ class Game:
         self.scatterTime = pygame.time.get_ticks() + self.scatterTime
         print(self.scatterTime)  # TODO: Delete this print
 
-        if self.scatterTime > 20000000 and self.blinky.ghostState == GhostStates.Chase:
-            self.scatterTime = 0
-            self.blinky.ghostState = GhostStates.Scatter
-        elif (
-            self.scatterTime > 7000000 and self.blinky.ghostState == GhostStates.Scatter
+        if (
+            self.scatterTime > 20000000
+            and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
             self.scatterTime = 0
-            self.blinky.ghostState = GhostStates.Chase
+            for ghost in self.ghostGroup:
+                ghost.ghostState = GhostStates.Scatter
+        elif (
+            self.scatterTime > 7000000
+            and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
+        ):
+            self.scatterTime = 0
+            for ghost in self.ghostGroup:
+                ghost.ghostState = GhostStates.Chase
 
         self.pacman.update(self.wallGroup)
         self.ghostGroup.update(self.wallGroup, self.pacman)
