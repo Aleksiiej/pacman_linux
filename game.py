@@ -11,6 +11,7 @@ from text.lostGameText import LostGameText
 from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 from map.wall import Wall
+from math import hypot
 
 
 class Game:
@@ -144,7 +145,7 @@ class Game:
 
         self.pacman.update(self.wallGroup)
         self.ghostGroup.update(self.wallGroup, self.pacman)
-        self.running = not self.checkIfLost()
+        self.running = not self.checkIfLost(self.pacman)
         if not self.running:
             self.gameResult = False
 
@@ -168,14 +169,14 @@ class Game:
                 self.scoreCounter.incrementScore()
                 break
 
-    def checkIfLost(self):
+    def checkIfLost(self, pacman):
         for ghost in self.ghostGroup:
-            if (
-                ghost.calculateDistanceWhenChase(self.pacman, ghost) < 20
-                and ghost.ghostState != GhostStates.Frightened
-            ):
+            if hypot(
+                pacman.rect.centerx - ghost.rect.centerx,
+                pacman.rect.centery - ghost.rect.centery,
+            ) < 20:
                 return True
-            return False
+        return False
 
     def render(self):
         self.screen.fill(BLACK)
