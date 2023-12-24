@@ -16,9 +16,22 @@ class Pinky(Ghost):
         self.FPSCounter = 0
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
+        expectedPointX = pacman.rect.centerx
+        expectedPointY = pacman.rect.centery
+
+        match pacman.currentDir:
+            case Direction.UP:
+                expectedPointY -= 4.5 * ENTITY_SIZE
+            case Direction.DOWN:
+                expectedPointY += 4.5 * ENTITY_SIZE
+            case Direction.RIGHT:
+                expectedPointX += 4.5 * ENTITY_SIZE
+            case Direction.LEFT:
+                expectedPointY -= 4.5 * ENTITY_SIZE
+
         return hypot(
-            pacman.rect.centerx - checkbox.rect.centerx,
-            pacman.rect.centery - checkbox.rect.centery,
+            expectedPointX - checkbox.rect.centerx,
+            expectedPointY - checkbox.rect.centery,
         )
 
     def calculateDistanceWhenScatter(self, checkbox):
