@@ -182,8 +182,10 @@ class Game:
         self.screen.fill(BLACK)
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
-        self.appleGroup.draw(self.screen)
-        self.powerUpGroup.draw(self.screen)
+        if not self.appleGroup.empty():
+            self.appleGroup.draw(self.screen)
+        if not self.powerUpGroup.empty():
+            self.powerUpGroup.draw(self.screen)
         self.ghostGroup.draw(self.screen)
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
