@@ -14,6 +14,7 @@ class Blinky(Ghost):
             )
         self.restrictedDir = Direction.DOWN
         self.FPSCounter = 0
+        self.ghostState = GhostStates.Chase
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
         return hypot(

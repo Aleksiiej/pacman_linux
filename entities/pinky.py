@@ -12,8 +12,18 @@ class Pinky(Ghost):
                 pygame.image.load(f"assets/ghost_images/pink.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-        self.restrictedDir = Direction.RIGHT
+        self.restrictedDir = Direction.LEFT
         self.FPSCounter = 0
+        self.ghostState = GhostStates.InBox
+
+    def calculateDistanceWhenInBox(self, checkbox):
+        if(self.rect.centery < 380):
+            self.ghostState = GhostStates.Chase
+            self.currentDir = Direction.UP
+        return hypot(
+            380 - checkbox.rect.centerx,
+            340 - checkbox.rect.centery,
+        )
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
         expectedPointX = pacman.rect.centerx

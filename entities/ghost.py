@@ -6,7 +6,6 @@ from globalValues import *
 class Ghost(Entity):
     def __init__(self, width, height, posX, posY):
         super().__init__(width, height, posX, posY)
-        self.ghostState = GhostStates.Chase
 
     def update(self, walls, pacman):
         for _ in range(VELOCITY):
@@ -38,6 +37,10 @@ class Ghost(Entity):
             self.moveCheckbox(checkbox)
             if not checkbox.checkCollisionWithWalls(checkbox, walls):
                 match self.ghostState:
+                    case GhostStates.InBox:
+                        possibleDirections[dir] = self.calculateDistanceWhenInBox(
+                            checkbox
+                        )
                     case GhostStates.Chase:
                         possibleDirections[dir] = self.calculateDistanceWhenChase(
                             pacman, checkbox

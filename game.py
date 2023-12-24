@@ -10,6 +10,7 @@ from text.wonGameText import WonGameText
 from text.lostGameText import LostGameText
 from text.mainMenuText import MainMenuText
 from map.map import prepareMap
+from map.wall import Wall
 
 
 class Game:
@@ -109,6 +110,20 @@ class Game:
                         sys.exit()
 
     def update(self):  # TODO: Implement changes for machine state
+        if (
+            self.ghostGroup.sprites()[0].ghostState != GhostStates.InBox
+            and self.ghostGroup.sprites()[1].ghostState != GhostStates.InBox
+        ):
+            self.wallGroup.add(
+                Wall(
+                    ENTITY_SIZE,
+                    ENTITY_SIZE,
+                    380,
+                    340,
+                    BLUE,
+                )
+            )
+
         self.scatterTime = pygame.time.get_ticks() + self.scatterTime
         print(self.scatterTime)  # TODO: Delete this print
 
