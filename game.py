@@ -182,9 +182,9 @@ class Game:
         self.screen.fill(BLACK)
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
-        if not self.appleGroup.empty():
+        if len(self.appleGroup) > 0:
             self.appleGroup.draw(self.screen)
-        if not self.powerUpGroup.empty():
+        if len(self.powerUpGroup) > 0:
             self.powerUpGroup.draw(self.screen)
         self.ghostGroup.draw(self.screen)
         self.scoreCounter.draw(self.screen)
