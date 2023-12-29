@@ -1,5 +1,6 @@
 import pygame
 import sys
+import time
 from globalValues import *
 from entities.pacman import Pacman
 from entities.blinky import Blinky
@@ -47,9 +48,13 @@ class Game:
         self.running = True
         self.gameResult = False
 
-        self.chaseTimer = pygame.time.Clock()
-        self.scatterTimer = pygame.time.Clock()
-        self.scatterTime = 0
+        self.ghostStateTimer = 0
+        self.ghostStateTimerStart = 0
+        self.ghostStateTimerEnd = 0
+
+        self.wasBoxClosed = False
+
+        start = time.time()
 
     def run(self):
         while True:
@@ -111,10 +116,7 @@ class Game:
                         sys.exit()
 
     def update(self):  # TODO: Implement changes for machine state
-        if (
-            self.ghostGroup.sprites()[0].ghostState != GhostStates.InBox
-            and self.ghostGroup.sprites()[1].ghostState != GhostStates.InBox
-        ):
+        if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
             self.wallGroup.add(
                 Wall(
                     ENTITY_SIZE,
@@ -124,22 +126,25 @@ class Game:
                     BLUE,
                 )
             )
+            self.wasBoxClosed = True
 
-        self.scatterTime = pygame.time.get_ticks() + self.scatterTime
-        print(self.scatterTime)  # TODO: Delete this print
+        self.ghostStateTimerEnd = time.time()
+        self.ghostStateTimer += self.ghostStateTimerEnd - self.ghostStateTimerStart
+        print(self.ghostStateTimer)  # TODO: Delete this print
+        self.ghostStateTimerStart = time.time()
 
         if (
-            self.scatterTime > 20000000
+            self.ghostStateTimer > 20
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
-            self.scatterTime = 0
+            self.ghostStateTimer = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Scatter
         elif (
-            self.scatterTime > 7000000
+            self.ghostStateTimer > 7
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
         ):
-            self.scatterTime = 0
+            self.ghostStateTimer = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Chase
 
@@ -171,10 +176,13 @@ class Game:
 
     def checkIfLost(self, pacman):
         for ghost in self.ghostGroup:
-            if hypot(
-                pacman.rect.centerx - ghost.rect.centerx,
-                pacman.rect.centery - ghost.rect.centery,
-            ) < 20:
+            if (
+                hypot(
+                    pacman.rect.centerx - ghost.rect.centerx,
+                    pacman.rect.centery - ghost.rect.centery,
+                )
+                < 20
+            ):
                 return True
         return False
 

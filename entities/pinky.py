@@ -17,9 +17,8 @@ class Pinky(Ghost):
         self.ghostState = GhostStates.InBox
 
     def calculateDistanceWhenInBox(self, checkbox):
-        if(self.rect.centery < 380):
+        if self.rect.centery < 380:
             self.ghostState = GhostStates.Chase
-            self.currentDir = Direction.UP
         return hypot(
             380 - checkbox.rect.centerx,
             340 - checkbox.rect.centery,
