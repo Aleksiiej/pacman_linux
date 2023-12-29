@@ -54,8 +54,6 @@ class Game:
 
         self.wasBoxClosed = False
 
-        start = time.time()
-
     def run(self):
         while True:
             self.showMainMenuText()
