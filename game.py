@@ -13,6 +13,7 @@ from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 from map.wall import Wall
 from math import hypot
+from asyncTimer import AsyncTimer
 
 
 class Game:
@@ -53,7 +54,9 @@ class Game:
         self.ghostStateTimerEnd = 0
 
         self.wasBoxClosed = False
-
+        
+        self.currentTime = 0
+    
     def run(self):
         while True:
             self.showMainMenuText()
@@ -65,6 +68,8 @@ class Game:
 
                     event = pygame.event.wait()
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                        asyncTimer = AsyncTimer(self.currentTime, self)
+                        asyncTimer.start()
                         self.gameLoop()
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
@@ -73,6 +78,7 @@ class Game:
                         pass
 
                     if not self.running:
+                        asyncTimer.join()
                         self.showEndgameText()
                         pygame.event.wait()
                         self.initNewGame()
@@ -128,7 +134,7 @@ class Game:
 
         self.ghostStateTimerEnd = time.time()
         self.ghostStateTimer += self.ghostStateTimerEnd - self.ghostStateTimerStart
-        print(self.ghostStateTimer)  # TODO: Delete this print
+        # print(self.ghostStateTimer)  # TODO: Delete this print
         self.ghostStateTimerStart = time.time()
 
         if (
