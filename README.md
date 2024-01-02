@@ -12,6 +12,7 @@ This project is a homage to the classic arcade game Pacman, recreated using Pyth
 - Classic Gameplay: Mimics the iconic Pacman gameplay, offering a nostalgic experience with a modern coding approach.
 - Linux Compatibility: Optimized for performance on Linux operating systems, ensuring smooth gameplay on a variety of Linux distributions.
 - Design Patterns: Command, Game Loop and State Machine design patterns has been implemented in this project
+- Multithreading: State Machine timer is implemented on secondary thread with use of python threading module
 
 ## Technical Stack:
 - Language: Python
