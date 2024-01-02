@@ -13,7 +13,7 @@ class AsyncTimer(threading.Thread):
     def run(self):
         while True:
             if not self.game.running:
-                self._stop()
+                break
             self.endTime = time.time()
             self.currentTime += self.endTime - self.startTime
             print(self.currentTime)
