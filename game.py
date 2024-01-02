@@ -1,6 +1,5 @@
 import pygame
 import sys
-import time
 from globalValues import *
 from entities.pacman import Pacman
 from entities.blinky import Blinky
@@ -49,13 +48,7 @@ class Game:
         self.running = True
         self.gameResult = False
 
-        self.ghostStateTimer = 0
-        self.ghostStateTimerStart = 0
-        self.ghostStateTimerEnd = 0
-
         self.wasBoxClosed = False
-        
-        self.currentTime = 0
     
     def run(self):
         while True:
@@ -68,9 +61,9 @@ class Game:
 
                     event = pygame.event.wait()
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        asyncTimer = AsyncTimer(self.currentTime, self)
+                        asyncTimer = AsyncTimer(self)
                         asyncTimer.start()
-                        self.gameLoop()
+                        self.gameLoop(asyncTimer)
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
@@ -90,14 +83,14 @@ class Game:
             else:
                 pass
 
-    def gameLoop(self):
+    def gameLoop(self, asyncTimer):
         while self.running:
-            self.processInput()
-            self.update()
+            self.processInput(asyncTimer)
+            self.update(asyncTimer)
             self.render()
             self.clock.tick(FPS)
 
-    def processInput(self):
+    def processInput(self, asyncTimer):
         for event in pygame.event.get():
             if (
                 event.type == pygame.QUIT
@@ -116,10 +109,11 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman.proposedDir = Direction.RIGHT
                     case pygame.K_ESCAPE:
+                        asyncTimer.join()
                         pygame.quit()
                         sys.exit()
 
-    def update(self):  # TODO: Implement changes for machine state
+    def update(self, asyncTimer):  # TODO: Implement changes for machine state
         if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
             self.wallGroup.add(
                 Wall(
@@ -132,23 +126,18 @@ class Game:
             )
             self.wasBoxClosed = True
 
-        self.ghostStateTimerEnd = time.time()
-        self.ghostStateTimer += self.ghostStateTimerEnd - self.ghostStateTimerStart
-        # print(self.ghostStateTimer)  # TODO: Delete this print
-        self.ghostStateTimerStart = time.time()
-
         if (
-            self.ghostStateTimer > 20
+            asyncTimer.currentTime > 20
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
-            self.ghostStateTimer = 0
+            asyncTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Scatter
         elif (
-            self.ghostStateTimer > 7
+            asyncTimer.currentTime > 7
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
         ):
-            self.ghostStateTimer = 0
+            asyncTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Chase
 
