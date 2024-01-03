@@ -47,7 +47,6 @@ class Game:
         self.lostGameText = LostGameText()
         self.running = True
         self.gameResult = False
-
         self.wasBoxClosed = False
     
     def run(self):
@@ -151,6 +150,9 @@ class Game:
             if powerUp.rect.colliderect(self.pacman):
                 # TODO: implemented changes for state machine
                 # self.blinky.ghostState = GhostStates.Frightened
+                for ghost in self.ghostGroup:
+                    ghost.ghostState = GhostStates.Frightened
+                    ghost.reverseDir()
                 self.scoreCounter.incrementScoreBy5()
                 self.powerUpGroup.remove(powerUp)
                 if len(self.powerUpGroup) == 0:
@@ -187,7 +189,8 @@ class Game:
             self.appleGroup.draw(self.screen)
         if len(self.powerUpGroup) > 0:
             self.powerUpGroup.draw(self.screen)
-        self.ghostGroup.draw(self.screen)
+        for ghost in self.ghostGroup:
+            ghost.draw(self.screen)
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 

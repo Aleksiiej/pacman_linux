@@ -1,5 +1,5 @@
+import pygame
 from entities.entity import Entity
-from math import hypot
 from globalValues import *
 
 
@@ -83,5 +83,25 @@ class Ghost(Entity):
             case Direction.RIGHT:
                 self.restrictedDir = Direction.LEFT
 
+    def reverseDir(self):
+        match self.currentDir:
+            case Direction.UP:
+                self.currentDir = Direction.DOWN
+            case Direction.DOWN:
+                self.currentDir = Direction.UP
+            case Direction.LEFT:
+                self.currentDir = Direction.RIGHT
+            case Direction.RIGHT:
+                self.currentDir = Direction.LEFT
+
+    
     def draw(self, screen):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        match self.ghostState:
+            case GhostStates.InBox:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Chase:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Scatter:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Frightened:
+                screen.blit(self.frightenedImage, (self.rect.x, self.rect.y))
