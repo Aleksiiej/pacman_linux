@@ -1,4 +1,3 @@
-import pygame
 from entities.entity import Entity
 from globalValues import *
 
