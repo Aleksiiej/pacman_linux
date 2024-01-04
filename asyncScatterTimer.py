@@ -3,7 +3,7 @@ import time
 import pygame
 
 
-class AsyncTimer(threading.Thread):
+class AsyncScatterTimer(threading.Thread):
     def __init__(self, game):
         threading.Thread.__init__(self)
         self.startTime = time.time()

@@ -12,7 +12,7 @@ from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 from map.wall import Wall
 from math import hypot
-from asyncTimer import AsyncTimer
+from asyncScatterTimer import AsyncScatterTimer
 
 
 class Game:
@@ -48,7 +48,7 @@ class Game:
         self.running = True
         self.gameResult = False
         self.wasBoxClosed = False
-    
+
     def run(self):
         while True:
             self.showMainMenuText()
@@ -60,9 +60,9 @@ class Game:
 
                     event = pygame.event.wait()
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        asyncTimer = AsyncTimer(self)
-                        asyncTimer.start()
-                        self.gameLoop(asyncTimer)
+                        asyncScatterTimer = AsyncScatterTimer(self)
+                        asyncScatterTimer.start()
+                        self.gameLoop(asyncScatterTimer)
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
@@ -70,7 +70,7 @@ class Game:
                         pass
 
                     if not self.running:
-                        asyncTimer.join()
+                        asyncScatterTimer.join()
                         self.showEndgameText()
                         pygame.event.wait()
                         self.initNewGame()
@@ -82,14 +82,14 @@ class Game:
             else:
                 pass
 
-    def gameLoop(self, asyncTimer):
+    def gameLoop(self, asyncScatterTimer):
         while self.running:
-            self.processInput(asyncTimer)
-            self.update(asyncTimer)
+            self.processInput(asyncScatterTimer)
+            self.update(asyncScatterTimer)
             self.render()
             self.clock.tick(FPS)
 
-    def processInput(self, asyncTimer):
+    def processInput(self, asyncScatterTimer):
         for event in pygame.event.get():
             if (
                 event.type == pygame.QUIT
@@ -108,11 +108,11 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman.proposedDir = Direction.RIGHT
                     case pygame.K_ESCAPE:
-                        asyncTimer.join()
+                        asyncScatterTimer.join()
                         pygame.quit()
                         sys.exit()
 
-    def update(self, asyncTimer):  # TODO: Implement changes for machine state
+    def update(self, asyncScatterTimer):  # TODO: Implement changes for machine state
         if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
             self.wallGroup.add(
                 Wall(
@@ -126,17 +126,17 @@ class Game:
             self.wasBoxClosed = True
 
         if (
-            asyncTimer.currentTime > 20
+            asyncScatterTimer.currentTime > 20
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
-            asyncTimer.currentTime = 0
+            asyncScatterTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Scatter
         elif (
-            asyncTimer.currentTime > 7
+            asyncScatterTimer.currentTime > 7
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
         ):
-            asyncTimer.currentTime = 0
+            asyncScatterTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Chase
 
