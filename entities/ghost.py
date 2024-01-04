@@ -1,5 +1,6 @@
 from entities.entity import Entity
 from globalValues import *
+import random
 
 
 class Ghost(Entity):
@@ -48,6 +49,8 @@ class Ghost(Entity):
                         possibleDirections[dir] = self.calculateDistanceWhenScatter(
                             checkbox
                         )
+                    case GhostStates.Frightened:
+                        possibleDirections[dir] = self.calculateRandomDir()
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
@@ -71,6 +74,9 @@ class Ghost(Entity):
             case Direction.DOWN:
                 entity.rect.centery += 10
 
+    def calculateRandomDir(self):
+        return random.randrange(0, 100)
+
     def setRestrictedDir(self):
         match self.currentDir:
             case Direction.UP:
@@ -86,14 +92,17 @@ class Ghost(Entity):
         match self.currentDir:
             case Direction.UP:
                 self.currentDir = Direction.DOWN
+                self.restrictedDir = Direction.UP
             case Direction.DOWN:
                 self.currentDir = Direction.UP
+                self.restrictedDir = Direction.DOWN
             case Direction.LEFT:
                 self.currentDir = Direction.RIGHT
+                self.restrictedDir = Direction.LEFT
             case Direction.RIGHT:
                 self.currentDir = Direction.LEFT
+                self.restrictedDir = Direction.RIGHT
 
-    
     def draw(self, screen):
         match self.ghostState:
             case GhostStates.InBox:
