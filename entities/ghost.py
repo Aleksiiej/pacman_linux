@@ -113,3 +113,5 @@ class Ghost(Entity):
                 screen.blit(self.image, (self.rect.x, self.rect.y))
             case GhostStates.Frightened:
                 screen.blit(self.frightenedImage, (self.rect.x, self.rect.y))
+            case GhostStates.Eaten:
+                screen.blit(self.eatenImage, (self.rect.x, self.rect.y))

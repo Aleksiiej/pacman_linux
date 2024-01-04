@@ -63,7 +63,9 @@ class Game:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                         asyncScatterTimer = AsyncScatterTimer(self)
                         asyncScatterTimer.start()
-                        self.gameLoop(asyncScatterTimer)
+                        asyncFrightenedTimer = AsyncFrightenedTimer(self)
+                        asyncFrightenedTimer.start()
+                        self.gameLoop(asyncScatterTimer, asyncFrightenedTimer)
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
@@ -83,14 +85,14 @@ class Game:
             else:
                 pass
 
-    def gameLoop(self, asyncScatterTimer):
+    def gameLoop(self, asyncScatterTimer, asyncFrightenedTimer):
         while self.running:
-            self.processInput(asyncScatterTimer)
-            self.update(asyncScatterTimer)
+            self.processInput(asyncScatterTimer, asyncFrightenedTimer)
+            self.update(asyncScatterTimer, asyncFrightenedTimer)
             self.render()
             self.clock.tick(FPS)
 
-    def processInput(self, asyncScatterTimer):
+    def processInput(self, asyncScatterTimer, asyncFrightenedTimer):
         for event in pygame.event.get():
             if (
                 event.type == pygame.QUIT
@@ -110,10 +112,12 @@ class Game:
                         self.pacman.proposedDir = Direction.RIGHT
                     case pygame.K_ESCAPE:
                         asyncScatterTimer.join()
+                        asyncFrightenedTimer.join()
                         pygame.quit()
                         sys.exit()
 
-    def update(self, asyncScatterTimer):  # TODO: Implement changes for machine state
+    def update(self, asyncScatterTimer, asyncFrightenedTimer):  # TODO: Implement changes for machine state
+        print(asyncFrightenedTimer.currentTime)
         if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
             self.wallGroup.add(
                 Wall(
@@ -143,7 +147,7 @@ class Game:
 
         self.pacman.update(self.wallGroup)
         self.ghostGroup.update(self.wallGroup, self.pacman)
-        self.running = not self.checkIfLost(self.pacman)
+        self.running = not self.checkIfLost(self.pacman, asyncFrightenedTimer)
         if not self.running:
             self.gameResult = False
 
@@ -170,7 +174,7 @@ class Game:
                 self.scoreCounter.incrementScore()
                 break
 
-    def checkIfLost(self, pacman):
+    def checkIfLost(self, pacman, asyncFrightenedTimer):
         for ghost in self.ghostGroup:
             if (
                 hypot(
@@ -186,6 +190,9 @@ class Game:
                 ):
                     return True
                 else:
+                    asyncFrightenedTimer.currentTime = 0
+                    for ghost in self.ghostGroup:
+                        ghost.ghostState = GhostStates.Eaten
                     return False
 
     def render(self):

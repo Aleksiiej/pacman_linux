@@ -7,6 +7,7 @@ class Entity(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
         self.frightenedImage = pygame.Surface([width, height])
+        self.eatenImage = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.rect.center = [posX, posY]
         self.currentDir = Direction.RIGHT
