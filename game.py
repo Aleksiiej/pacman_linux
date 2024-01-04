@@ -13,6 +13,7 @@ from map.map import prepareMap
 from map.wall import Wall
 from math import hypot
 from asyncScatterTimer import AsyncScatterTimer
+from asyncFrightenedTimer import AsyncFrightenedTimer
 
 
 class Game:
