@@ -179,8 +179,14 @@ class Game:
                 )
                 < 20
             ):
-                return True
-        return False
+                if (
+                    ghost.ghostState == GhostStates.Chase
+                    or ghost.ghostState == GhostStates.Scatter
+                    or ghost.ghostState == GhostStates.InBox
+                ):
+                    return True
+                else:
+                    return False
 
     def render(self):
         self.screen.fill(BLACK)
