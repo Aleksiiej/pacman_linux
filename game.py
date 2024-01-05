@@ -116,8 +116,18 @@ class Game:
                         pygame.quit()
                         sys.exit()
 
-    def update(self, asyncScatterTimer, asyncFrightenedTimer):  # TODO: Implement changes for machine state
-        print(asyncFrightenedTimer.currentTime)
+    def update(self, asyncScatterTimer, asyncFrightenedTimer):
+        self.handleGate()
+        self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
+        self.pacman.update(self.wallGroup)
+        self.ghostGroup.update(self.wallGroup, self.pacman)
+        self.running = not self.handleGhostCollision(self.pacman, asyncFrightenedTimer)
+        if not self.running:
+            self.gameResult = False
+        self.handlePowerUpCollision(asyncFrightenedTimer)
+        self.handleAppleCollision()
+
+    def handleGate(self):
         if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
             self.wallGroup.add(
                 Wall(
@@ -130,6 +140,7 @@ class Game:
             )
             self.wasBoxClosed = True
 
+    def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if (
             asyncScatterTimer.currentTime > 20
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
@@ -145,36 +156,15 @@ class Game:
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Chase
 
-        self.pacman.update(self.wallGroup)
-        self.ghostGroup.update(self.wallGroup, self.pacman)
-        self.running = not self.checkIfLost(self.pacman, asyncFrightenedTimer)
-        if not self.running:
-            self.gameResult = False
+        if (
+            asyncFrightenedTimer.currentTime > 6
+            and self.ghostGroup.sprites()[0].ghostState == GhostStates.Frightened
+        ):
+            asyncFrightenedTimer.currentTime = 0
+            for ghost in self.ghostGroup:
+                ghost.ghostState = GhostStates.Chase
 
-        for powerUp in self.powerUpGroup:
-            if powerUp.rect.colliderect(self.pacman):
-                # TODO: implemented changes for state machine
-                # self.blinky.ghostState = GhostStates.Frightened
-                for ghost in self.ghostGroup:
-                    ghost.ghostState = GhostStates.Frightened
-                    ghost.reverseDir()
-                self.scoreCounter.incrementScoreBy5()
-                self.powerUpGroup.remove(powerUp)
-                if len(self.powerUpGroup) == 0:
-                    del self.powerUpGroup
-                pass
-
-        for apple in self.appleGroup:
-            if apple.rect.colliderect(self.pacman):
-                self.appleGroup.remove(apple)
-                if len(self.appleGroup) == 0:
-                    self.running = False
-                    self.gameResult = True
-                    break
-                self.scoreCounter.incrementScore()
-                break
-
-    def checkIfLost(self, pacman, asyncFrightenedTimer):
+    def handleGhostCollision(self, pacman, asyncFrightenedTimer):
         for ghost in self.ghostGroup:
             if (
                 hypot(
@@ -191,9 +181,35 @@ class Game:
                     return True
                 else:
                     asyncFrightenedTimer.currentTime = 0
+                    if(ghost.ghostState == GhostStates.Frightened):
+                        self.scoreCounter.incrementScoreBy30()
                     for ghost in self.ghostGroup:
                         ghost.ghostState = GhostStates.Eaten
                     return False
+
+    def handlePowerUpCollision(self, asyncFrightenedTimer):
+        for powerUp in self.powerUpGroup:
+            if powerUp.rect.colliderect(self.pacman):
+                for ghost in self.ghostGroup:
+                    ghost.ghostState = GhostStates.Frightened
+                    ghost.reverseDir()
+                asyncFrightenedTimer.currentTime = 0
+                self.scoreCounter.incrementScoreBy5()
+                self.powerUpGroup.remove(powerUp)
+                if len(self.powerUpGroup) == 0:
+                    del self.powerUpGroup
+                pass
+
+    def handleAppleCollision(self):
+        for apple in self.appleGroup:
+            if apple.rect.colliderect(self.pacman):
+                self.appleGroup.remove(apple)
+                if len(self.appleGroup) == 0:
+                    self.running = False
+                    self.gameResult = True
+                    break
+                self.scoreCounter.incrementScore()
+                break
 
     def render(self):
         self.screen.fill(BLACK)

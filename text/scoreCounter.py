@@ -16,5 +16,9 @@ class ScoreCounter:
         self.score += 5
         self.textImg = self.text.render("Score: " + str(self.score), True, RED)
 
+    def incrementScoreBy30(self):
+        self.score += 30
+        self.textImg = self.text.render("Score: " + str(self.score), True, RED)
+
     def draw(self, screen):
         screen.blit(self.textImg, (780, 400))
