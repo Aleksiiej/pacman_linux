@@ -27,7 +27,7 @@ class Pacman(Entity):
             self.rect.centerx,
             self.rect.centery,
         )
-        ret.currentDir, ret.proposedDir = self.currentDir, self.proposedDir
+        ret.currentDir_, ret.proposedDir = self.currentDir_, self.proposedDir
         return ret
 
     def checkMoveForward(self, checkbox, walls):
@@ -42,16 +42,16 @@ class Pacman(Entity):
             if self.FPSCounter % 5 == 0:
                 self.updateFPSCounter()
             else:
-                if self.currentDir == self.proposedDir:
+                if self.currentDir_ == self.proposedDir:
                     self.checkMoveForward(checkbox, walls)
                 else:
-                    checkbox.currentDir = checkbox.proposedDir
+                    checkbox.currentDir_ = checkbox.proposedDir
                     self.move(checkbox)
                     if self.checkCollisionWithWalls(checkbox, walls):
                         checkbox = self.createCheckbox()
                         self.checkMoveForward(checkbox, walls)
                     else:
-                        self.currentDir = self.proposedDir
+                        self.currentDir_ = self.proposedDir
                         self.move(self)
                 self.updateFPSCounter()
 
@@ -61,7 +61,7 @@ class Pacman(Entity):
         self.FPSCounter += 1
 
     def draw(self, screen):
-        match self.currentDir:
+        match self.currentDir_:
             case Direction.UP:
                 screen.blit(
                     pygame.transform.rotate(self.images[self.currentImageIdx], 90),

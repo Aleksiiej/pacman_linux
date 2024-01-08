@@ -8,15 +8,15 @@ class Pinky(Ghost):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
-            self.image = pygame.transform.scale(
+            self.image_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/pink.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-            self.frightenedImage = pygame.transform.scale(
+            self.frightenedImage_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/powerup.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-            self.eatenImage = pygame.transform.scale(
+            self.eatenImage_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/dead.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
@@ -36,7 +36,7 @@ class Pinky(Ghost):
         expectedPointX = pacman.rect.centerx
         expectedPointY = pacman.rect.centery
 
-        match pacman.currentDir:
+        match pacman.currentDir_:
             case Direction.UP:
                 expectedPointY -= 4.5 * ENTITY_SIZE
             case Direction.DOWN:

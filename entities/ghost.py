@@ -17,23 +17,23 @@ class Ghost(Entity):
                     pacman, walls
                 )
                 if self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y:
-                    self.currentDir = Direction.UP
+                    self.currentDir_ = Direction.UP
                 elif (
                     self.rect.centerx == BLINKY_START_X
                     and self.rect.centery == BLINKY_START_Y
-                    and self.currentDir == Direction.LEFT
+                    and self.currentDir_ == Direction.LEFT
                     and self.ghostState != GhostStates.Eaten
                 ):
-                    self.currentDir = Direction.LEFT
+                    self.currentDir_ = Direction.LEFT
                 elif (
                     self.rect.centerx == BLINKY_START_X
                     and self.rect.centery == BLINKY_START_Y
-                    and self.currentDir == Direction.RIGHT
+                    and self.currentDir_ == Direction.RIGHT
                     and self.ghostState != GhostStates.Eaten
                 ):
-                    self.currentDir = Direction.RIGHT
+                    self.currentDir_ = Direction.RIGHT
                 elif len(possibleDirections) > 0:
-                    self.currentDir = min(
+                    self.currentDir_ = min(
                         possibleDirections, key=possibleDirections.get
                     )
                 self.setRestrictedDir()
@@ -50,7 +50,7 @@ class Ghost(Entity):
         possibleDirections = {}
         for dir in DIRECTION_LIST:
             checkbox = self.createCheckbox()
-            checkbox.currentDir = dir
+            checkbox.currentDir_ = dir
             self.moveCheckbox(checkbox)
             if not checkbox.checkCollisionWithWalls(checkbox, walls):
                 match self.ghostState:
@@ -85,7 +85,7 @@ class Ghost(Entity):
         )
 
     def moveCheckbox(self, entity):
-        match entity.currentDir:
+        match entity.currentDir_:
             case Direction.LEFT:
                 entity.rect.centerx -= 10
             case Direction.RIGHT:
@@ -107,7 +107,7 @@ class Ghost(Entity):
         )
 
     def setRestrictedDir(self):
-        match self.currentDir:
+        match self.currentDir_:
             case Direction.UP:
                 self.restrictedDir = Direction.DOWN
             case Direction.DOWN:
@@ -118,29 +118,29 @@ class Ghost(Entity):
                 self.restrictedDir = Direction.LEFT
 
     def reverseDir(self):
-        match self.currentDir:
+        match self.currentDir_:
             case Direction.UP:
-                self.currentDir = Direction.DOWN
+                self.currentDir_ = Direction.DOWN
                 self.restrictedDir = Direction.UP
             case Direction.DOWN:
-                self.currentDir = Direction.UP
+                self.currentDir_ = Direction.UP
                 self.restrictedDir = Direction.DOWN
             case Direction.LEFT:
-                self.currentDir = Direction.RIGHT
+                self.currentDir_ = Direction.RIGHT
                 self.restrictedDir = Direction.LEFT
             case Direction.RIGHT:
-                self.currentDir = Direction.LEFT
+                self.currentDir_ = Direction.LEFT
                 self.restrictedDir = Direction.RIGHT
 
     def draw(self, screen):
         match self.ghostState:
             case GhostStates.InBox:
-                screen.blit(self.image, (self.rect.x, self.rect.y))
+                screen.blit(self.image_, (self.rect.x, self.rect.y))
             case GhostStates.Chase:
-                screen.blit(self.image, (self.rect.x, self.rect.y))
+                screen.blit(self.image_, (self.rect.x, self.rect.y))
             case GhostStates.Scatter:
-                screen.blit(self.image, (self.rect.x, self.rect.y))
+                screen.blit(self.image_, (self.rect.x, self.rect.y))
             case GhostStates.Frightened:
-                screen.blit(self.frightenedImage, (self.rect.x, self.rect.y))
+                screen.blit(self.frightenedImage_, (self.rect.x, self.rect.y))
             case GhostStates.Eaten:
-                screen.blit(self.eatenImage, (self.rect.x, self.rect.y))
+                screen.blit(self.eatenImage_, (self.rect.x, self.rect.y))

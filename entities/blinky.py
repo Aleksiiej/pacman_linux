@@ -8,15 +8,15 @@ class Blinky(Ghost):
     def __init__(self, width, height, posX, posY, isCheckbox=True):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
-            self.image = pygame.transform.scale(
+            self.image_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/red.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-            self.frightenedImage = pygame.transform.scale(
+            self.frightenedImage_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/powerup.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-            self.eatenImage = pygame.transform.scale(
+            self.eatenImage_ = pygame.transform.scale(
                 pygame.image.load(f"assets/ghost_images/dead.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )

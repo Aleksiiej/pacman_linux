@@ -4,8 +4,8 @@ from globalValues import *
 
 class StartgameText:
     def __init__(self):
-        self.text = pygame.font.SysFont(None, 24)
-        self.message = [
+        self.text_ = pygame.font.SysFont(None, 24)
+        self.message_ = [
             "Welcome in Pacman",
             "INSTRUCTIONS:",
             "ARROW KEYS to control Pacman",
@@ -14,8 +14,8 @@ class StartgameText:
             "Or ESCAPE to exit game",
         ]
         self.startgameTextImages = []
-        for line in self.message:
-            self.startgameTextImages.append(self.text.render(line, True, RED))
+        for line in self.message_:
+            self.startgameTextImages.append(self.text_.render(line, True, RED))
 
     def draw(self, screen):
         posY = 50

@@ -5,15 +5,15 @@ from globalValues import *
 class Entity(pygame.sprite.Sprite):
     def __init__(self, width, height, posX, posY):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([width, height])
-        self.frightenedImage = pygame.Surface([width, height])
-        self.eatenImage = pygame.Surface([width, height])
-        self.rect = self.image.get_rect()
+        self.image_ = pygame.Surface([width, height])
+        self.frightenedImage_ = pygame.Surface([width, height])
+        self.eatenImage_ = pygame.Surface([width, height])
+        self.rect = self.image_.get_rect()
         self.rect.center = [posX, posY]
-        self.currentDir = Direction.RIGHT
+        self.currentDir_ = Direction.RIGHT
 
     def move(self, entity):
-        match entity.currentDir:
+        match entity.currentDir_:
             case Direction.LEFT:
                 entity.rect.x -= 1
             case Direction.RIGHT:
