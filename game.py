@@ -12,8 +12,8 @@ from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 from map.wall import Wall
 from math import hypot
-from asyncScatterTimer import AsyncScatterTimer
-from asyncFrightenedTimer import AsyncFrightenedTimer
+from timers.asyncScatterTimer import AsyncScatterTimer
+from timers.asyncFrightenedTimer import AsyncFrightenedTimer
 
 
 class Game:
@@ -104,13 +104,13 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 match event.key:
                     case pygame.K_UP:
-                        self.pacman_.proposedDir = Direction.UP
+                        self.pacman_.proposedDir_ = Direction.UP
                     case pygame.K_DOWN:
-                        self.pacman_.proposedDir = Direction.DOWN
+                        self.pacman_.proposedDir_ = Direction.DOWN
                     case pygame.K_LEFT:
-                        self.pacman_.proposedDir = Direction.LEFT
+                        self.pacman_.proposedDir_ = Direction.LEFT
                     case pygame.K_RIGHT:
-                        self.pacman_.proposedDir = Direction.RIGHT
+                        self.pacman_.proposedDir_ = Direction.RIGHT
                     case pygame.K_ESCAPE:
                         asyncScatterTimer.join()
                         asyncFrightenedTimer.join()
@@ -132,8 +132,8 @@ class Game:
         counter = 0
         for ghost in self.ghostGroup_:
             if (
-                not ghost.ghostState == GhostStates.InBox
-                and not ghost.ghostState == GhostStates.Eaten
+                not ghost.ghostState_ == GhostStates.InBox
+                and not ghost.ghostState_ == GhostStates.Eaten
             ):
                 counter += 1
         if counter == len(self.ghostGroup_) and not self.wasBoxClosed_:
@@ -153,26 +153,26 @@ class Game:
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if (
             asyncScatterTimer.currentTime_ > CHASE_TIME
-            and self.ghostGroup_.sprites()[0].ghostState == GhostStates.Chase
+            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Chase
         ):
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState = GhostStates.Scatter
+                ghost.ghostState_ = GhostStates.Scatter
         elif (
             asyncScatterTimer.currentTime_ > SCATTER_TIME
-            and self.ghostGroup_.sprites()[0].ghostState == GhostStates.Scatter
+            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Scatter
         ):
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState = GhostStates.Chase
+                ghost.ghostState_ = GhostStates.Chase
 
         if (
             asyncFrightenedTimer.currentTime_ > FRIGHTENED_TIME
-            and self.ghostGroup_.sprites()[0].ghostState == GhostStates.Frightened
+            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Frightened
         ):
             asyncFrightenedTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState = GhostStates.Chase
+                ghost.ghostState_ = GhostStates.Chase
 
     def handleGhostCollision(self, pacman_, asyncFrightenedTimer):
         for ghost in self.ghostGroup_:
@@ -184,23 +184,23 @@ class Game:
                 < 20
             ):
                 if (
-                    ghost.ghostState == GhostStates.Chase
-                    or ghost.ghostState == GhostStates.Scatter
-                    or ghost.ghostState == GhostStates.InBox
+                    ghost.ghostState_ == GhostStates.Chase
+                    or ghost.ghostState_ == GhostStates.Scatter
+                    or ghost.ghostState_ == GhostStates.InBox
                 ):
                     return True
                 else:
                     asyncFrightenedTimer.currentTime = 0
-                    if ghost.ghostState == GhostStates.Frightened:
+                    if ghost.ghostState_ == GhostStates.Frightened:
                         self.scoreCounter_.incrementScoreBy30()
-                        ghost.ghostState = GhostStates.Eaten
+                        ghost.ghostState_ = GhostStates.Eaten
                     return False
 
     def handlePowerUpCollision(self, asyncFrightenedTimer):
         for powerUp in self.powerUpGroup_:
             if powerUp.rect.colliderect(self.pacman_):
                 for ghost in self.ghostGroup_:
-                    ghost.ghostState = GhostStates.Frightened
+                    ghost.ghostState_ = GhostStates.Frightened
                     ghost.reverseDir()
                 asyncFrightenedTimer.currentTime = 0
                 self.scoreCounter_.incrementScoreBy5()

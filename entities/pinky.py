@@ -20,13 +20,13 @@ class Pinky(Ghost):
                 pygame.image.load(f"assets/ghost_images/dead.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-        self.restrictedDir = Direction.LEFT
-        self.FPSCounter = 0
-        self.ghostState = GhostStates.InBox
+        self.restrictedDir_ = Direction.LEFT
+        self.FPSCounter_ = 0
+        self.ghostState_ = GhostStates.InBox
 
     def calculateDistanceWhenInBox(self, checkbox):
         if self.rect.centery < 380:
-            self.ghostState = GhostStates.Scatter
+            self.ghostState_ = GhostStates.Scatter
         return hypot(
             380 - checkbox.rect.centerx,
             340 - checkbox.rect.centery,

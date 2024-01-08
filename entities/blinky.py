@@ -20,9 +20,9 @@ class Blinky(Ghost):
                 pygame.image.load(f"assets/ghost_images/dead.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
-        self.restrictedDir = Direction.DOWN
-        self.FPSCounter = 0
-        self.ghostState = GhostStates.Scatter
+        self.restrictedDir_ = Direction.DOWN
+        self.FPSCounter_ = 0
+        self.ghostState_ = GhostStates.Scatter
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
         return hypot(
