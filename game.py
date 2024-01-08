@@ -38,6 +38,7 @@ class Game:
             Pinky(ENTITY_SIZE, ENTITY_SIZE, PINKY_START_X, PINKY_START_Y, False)
         )
         self.wallGroup = pygame.sprite.Group()
+        self.gateGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         self.powerUpGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup, self.powerUpGroup)
@@ -128,8 +129,15 @@ class Game:
         self.handleAppleCollision()
 
     def handleGate(self):
-        if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
-            self.wallGroup.add(
+        counter = 0
+        for ghost in self.ghostGroup:
+            if (
+                not ghost.ghostState == GhostStates.InBox
+                and not ghost.ghostState == GhostStates.Eaten
+            ):
+                counter += 1
+        if counter == len(self.ghostGroup) and not self.wasBoxClosed:
+            self.gateGroup.add(
                 Wall(
                     ENTITY_SIZE,
                     ENTITY_SIZE,
@@ -139,6 +147,8 @@ class Game:
                 )
             )
             self.wasBoxClosed = True
+        else:
+            self.gateGroup.remove()
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if (
@@ -157,7 +167,7 @@ class Game:
                 ghost.ghostState = GhostStates.Chase
 
         if (
-            asyncFrightenedTimer.currentTime > 6
+            asyncFrightenedTimer.currentTime > 12
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Frightened
         ):
             asyncFrightenedTimer.currentTime = 0
@@ -181,9 +191,9 @@ class Game:
                     return True
                 else:
                     asyncFrightenedTimer.currentTime = 0
-                    if(ghost.ghostState == GhostStates.Frightened):
+                    if ghost.ghostState == GhostStates.Frightened:
                         self.scoreCounter.incrementScoreBy30()
-                    for ghost in self.ghostGroup:
+                        # for ghost in self.ghostGroup:
                         ghost.ghostState = GhostStates.Eaten
                     return False
 
@@ -215,6 +225,7 @@ class Game:
         self.screen.fill(BLACK)
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
+        self.gateGroup.draw(self.screen)
         if len(self.appleGroup) > 0:
             self.appleGroup.draw(self.screen)
         if len(self.powerUpGroup) > 0:
