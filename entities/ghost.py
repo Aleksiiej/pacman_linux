@@ -16,8 +16,22 @@ class Ghost(Entity):
                 possibleDirections = self.createListWithPossibleDirections(
                     pacman, walls
                 )
-                if(self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y):
+                if self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y:
                     self.currentDir = Direction.UP
+                elif (
+                    self.rect.centerx == BLINKY_START_X
+                    and self.rect.centery == BLINKY_START_Y
+                    and self.currentDir == Direction.LEFT
+                    and self.ghostState != GhostStates.Eaten
+                ):
+                    self.currentDir = Direction.LEFT
+                elif (
+                    self.rect.centerx == BLINKY_START_X
+                    and self.rect.centery == BLINKY_START_Y
+                    and self.currentDir == Direction.RIGHT
+                    and self.ghostState != GhostStates.Eaten
+                ):
+                    self.currentDir = Direction.RIGHT
                 elif len(possibleDirections) > 0:
                     self.currentDir = min(
                         possibleDirections, key=possibleDirections.get
@@ -55,7 +69,9 @@ class Ghost(Entity):
                     case GhostStates.Frightened:
                         possibleDirections[dir] = self.calculateRandomDir()
                     case GhostStates.Eaten:
-                        possibleDirections[dir] = self.calculateDistanceWhenEaten(checkbox)
+                        possibleDirections[dir] = self.calculateDistanceWhenEaten(
+                            checkbox
+                        )
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
@@ -83,7 +99,7 @@ class Ghost(Entity):
         return random.randrange(0, 100)
 
     def calculateDistanceWhenEaten(self, checkbox):
-        if(checkbox.rect.centerx == HOUSE_X and checkbox.rect.centery == HOUSE_Y):
+        if checkbox.rect.centerx == HOUSE_X and checkbox.rect.centery == HOUSE_Y:
             self.ghostState = GhostStates.Chase
         return hypot(
             HOUSE_X - checkbox.rect.centerx,

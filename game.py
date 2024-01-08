@@ -152,14 +152,14 @@ class Game:
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if (
-            asyncScatterTimer.currentTime > 20
+            asyncScatterTimer.currentTime > CHASE_TIME
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
             asyncScatterTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Scatter
         elif (
-            asyncScatterTimer.currentTime > 7
+            asyncScatterTimer.currentTime > SCATTER_TIME
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
         ):
             asyncScatterTimer.currentTime = 0
@@ -167,7 +167,7 @@ class Game:
                 ghost.ghostState = GhostStates.Chase
 
         if (
-            asyncFrightenedTimer.currentTime > 12
+            asyncFrightenedTimer.currentTime > FRIGHTENED_TIME
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Frightened
         ):
             asyncFrightenedTimer.currentTime = 0
