@@ -12,7 +12,8 @@ from text.mainMenuText import MainMenuText
 from map.map import prepareMap
 from map.wall import Wall
 from math import hypot
-from asyncTimer import AsyncTimer
+from asyncScatterTimer import AsyncScatterTimer
+from asyncFrightenedTimer import AsyncFrightenedTimer
 
 
 class Game:
@@ -37,6 +38,7 @@ class Game:
             Pinky(ENTITY_SIZE, ENTITY_SIZE, PINKY_START_X, PINKY_START_Y, False)
         )
         self.wallGroup = pygame.sprite.Group()
+        self.gateGroup = pygame.sprite.Group()
         self.appleGroup = pygame.sprite.Group()
         self.powerUpGroup = pygame.sprite.Group()
         prepareMap(self.wallGroup, self.appleGroup, self.powerUpGroup)
@@ -47,9 +49,8 @@ class Game:
         self.lostGameText = LostGameText()
         self.running = True
         self.gameResult = False
-
         self.wasBoxClosed = False
-    
+
     def run(self):
         while True:
             self.showMainMenuText()
@@ -61,9 +62,11 @@ class Game:
 
                     event = pygame.event.wait()
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                        asyncTimer = AsyncTimer(self)
-                        asyncTimer.start()
-                        self.gameLoop(asyncTimer)
+                        asyncScatterTimer = AsyncScatterTimer(self)
+                        asyncScatterTimer.start()
+                        asyncFrightenedTimer = AsyncFrightenedTimer(self)
+                        asyncFrightenedTimer.start()
+                        self.gameLoop(asyncScatterTimer, asyncFrightenedTimer)
                     elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
@@ -71,7 +74,7 @@ class Game:
                         pass
 
                     if not self.running:
-                        asyncTimer.join()
+                        asyncScatterTimer.join()
                         self.showEndgameText()
                         pygame.event.wait()
                         self.initNewGame()
@@ -83,14 +86,14 @@ class Game:
             else:
                 pass
 
-    def gameLoop(self, asyncTimer):
+    def gameLoop(self, asyncScatterTimer, asyncFrightenedTimer):
         while self.running:
-            self.processInput(asyncTimer)
-            self.update(asyncTimer)
+            self.processInput(asyncScatterTimer, asyncFrightenedTimer)
+            self.update(asyncScatterTimer, asyncFrightenedTimer)
             self.render()
             self.clock.tick(FPS)
 
-    def processInput(self, asyncTimer):
+    def processInput(self, asyncScatterTimer, asyncFrightenedTimer):
         for event in pygame.event.get():
             if (
                 event.type == pygame.QUIT
@@ -109,13 +112,32 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman.proposedDir = Direction.RIGHT
                     case pygame.K_ESCAPE:
-                        asyncTimer.join()
+                        asyncScatterTimer.join()
+                        asyncFrightenedTimer.join()
                         pygame.quit()
                         sys.exit()
 
-    def update(self, asyncTimer):  # TODO: Implement changes for machine state
-        if self.ghostGroup.sprites()[1].rect.centery < 380 and not self.wasBoxClosed:
-            self.wallGroup.add(
+    def update(self, asyncScatterTimer, asyncFrightenedTimer):
+        self.handleGate()
+        self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
+        self.pacman.update(self.wallGroup)
+        self.ghostGroup.update(self.wallGroup, self.pacman)
+        self.running = not self.handleGhostCollision(self.pacman, asyncFrightenedTimer)
+        if not self.running:
+            self.gameResult = False
+        self.handlePowerUpCollision(asyncFrightenedTimer)
+        self.handleAppleCollision()
+
+    def handleGate(self):
+        counter = 0
+        for ghost in self.ghostGroup:
+            if (
+                not ghost.ghostState == GhostStates.InBox
+                and not ghost.ghostState == GhostStates.Eaten
+            ):
+                counter += 1
+        if counter == len(self.ghostGroup) and not self.wasBoxClosed:
+            self.gateGroup.add(
                 Wall(
                     ENTITY_SIZE,
                     ENTITY_SIZE,
@@ -125,38 +147,70 @@ class Game:
                 )
             )
             self.wasBoxClosed = True
+        else:
+            self.gateGroup.remove()
 
+    def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if (
-            asyncTimer.currentTime > 20
+            asyncScatterTimer.currentTime > CHASE_TIME
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Chase
         ):
-            asyncTimer.currentTime = 0
+            asyncScatterTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Scatter
         elif (
-            asyncTimer.currentTime > 7
+            asyncScatterTimer.currentTime > SCATTER_TIME
             and self.ghostGroup.sprites()[0].ghostState == GhostStates.Scatter
         ):
-            asyncTimer.currentTime = 0
+            asyncScatterTimer.currentTime = 0
             for ghost in self.ghostGroup:
                 ghost.ghostState = GhostStates.Chase
 
-        self.pacman.update(self.wallGroup)
-        self.ghostGroup.update(self.wallGroup, self.pacman)
-        self.running = not self.checkIfLost(self.pacman)
-        if not self.running:
-            self.gameResult = False
+        if (
+            asyncFrightenedTimer.currentTime > FRIGHTENED_TIME
+            and self.ghostGroup.sprites()[0].ghostState == GhostStates.Frightened
+        ):
+            asyncFrightenedTimer.currentTime = 0
+            for ghost in self.ghostGroup:
+                ghost.ghostState = GhostStates.Chase
 
+    def handleGhostCollision(self, pacman, asyncFrightenedTimer):
+        for ghost in self.ghostGroup:
+            if (
+                hypot(
+                    pacman.rect.centerx - ghost.rect.centerx,
+                    pacman.rect.centery - ghost.rect.centery,
+                )
+                < 20
+            ):
+                if (
+                    ghost.ghostState == GhostStates.Chase
+                    or ghost.ghostState == GhostStates.Scatter
+                    or ghost.ghostState == GhostStates.InBox
+                ):
+                    return True
+                else:
+                    asyncFrightenedTimer.currentTime = 0
+                    if ghost.ghostState == GhostStates.Frightened:
+                        self.scoreCounter.incrementScoreBy30()
+                        # for ghost in self.ghostGroup:
+                        ghost.ghostState = GhostStates.Eaten
+                    return False
+
+    def handlePowerUpCollision(self, asyncFrightenedTimer):
         for powerUp in self.powerUpGroup:
             if powerUp.rect.colliderect(self.pacman):
-                # TODO: implemented changes for state machine
-                # self.blinky.ghostState = GhostStates.Frightened
+                for ghost in self.ghostGroup:
+                    ghost.ghostState = GhostStates.Frightened
+                    ghost.reverseDir()
+                asyncFrightenedTimer.currentTime = 0
                 self.scoreCounter.incrementScoreBy5()
                 self.powerUpGroup.remove(powerUp)
                 if len(self.powerUpGroup) == 0:
                     del self.powerUpGroup
                 pass
 
+    def handleAppleCollision(self):
         for apple in self.appleGroup:
             if apple.rect.colliderect(self.pacman):
                 self.appleGroup.remove(apple)
@@ -167,27 +221,17 @@ class Game:
                 self.scoreCounter.incrementScore()
                 break
 
-    def checkIfLost(self, pacman):
-        for ghost in self.ghostGroup:
-            if (
-                hypot(
-                    pacman.rect.centerx - ghost.rect.centerx,
-                    pacman.rect.centery - ghost.rect.centery,
-                )
-                < 20
-            ):
-                return True
-        return False
-
     def render(self):
         self.screen.fill(BLACK)
         self.pacman.draw(self.screen)
         self.wallGroup.draw(self.screen)
+        self.gateGroup.draw(self.screen)
         if len(self.appleGroup) > 0:
             self.appleGroup.draw(self.screen)
         if len(self.powerUpGroup) > 0:
             self.powerUpGroup.draw(self.screen)
-        self.ghostGroup.draw(self.screen)
+        for ghost in self.ghostGroup:
+            ghost.draw(self.screen)
         self.scoreCounter.draw(self.screen)
         pygame.display.flip()
 

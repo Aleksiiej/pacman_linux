@@ -1,6 +1,7 @@
 from entities.entity import Entity
-from math import hypot
 from globalValues import *
+import random
+from math import hypot
 
 
 class Ghost(Entity):
@@ -15,7 +16,23 @@ class Ghost(Entity):
                 possibleDirections = self.createListWithPossibleDirections(
                     pacman, walls
                 )
-                if len(possibleDirections) > 0:
+                if self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y:
+                    self.currentDir = Direction.UP
+                elif (
+                    self.rect.centerx == BLINKY_START_X
+                    and self.rect.centery == BLINKY_START_Y
+                    and self.currentDir == Direction.LEFT
+                    and self.ghostState != GhostStates.Eaten
+                ):
+                    self.currentDir = Direction.LEFT
+                elif (
+                    self.rect.centerx == BLINKY_START_X
+                    and self.rect.centery == BLINKY_START_Y
+                    and self.currentDir == Direction.RIGHT
+                    and self.ghostState != GhostStates.Eaten
+                ):
+                    self.currentDir = Direction.RIGHT
+                elif len(possibleDirections) > 0:
                     self.currentDir = min(
                         possibleDirections, key=possibleDirections.get
                     )
@@ -49,6 +66,12 @@ class Ghost(Entity):
                         possibleDirections[dir] = self.calculateDistanceWhenScatter(
                             checkbox
                         )
+                    case GhostStates.Frightened:
+                        possibleDirections[dir] = self.calculateRandomDir()
+                    case GhostStates.Eaten:
+                        possibleDirections[dir] = self.calculateDistanceWhenEaten(
+                            checkbox
+                        )
             if self.restrictedDir in possibleDirections:
                 del possibleDirections[self.restrictedDir]
         return possibleDirections
@@ -72,6 +95,17 @@ class Ghost(Entity):
             case Direction.DOWN:
                 entity.rect.centery += 10
 
+    def calculateRandomDir(self):
+        return random.randrange(0, 100)
+
+    def calculateDistanceWhenEaten(self, checkbox):
+        if checkbox.rect.centerx == HOUSE_X and checkbox.rect.centery == HOUSE_Y:
+            self.ghostState = GhostStates.Chase
+        return hypot(
+            HOUSE_X - checkbox.rect.centerx,
+            HOUSE_Y - checkbox.rect.centery,
+        )
+
     def setRestrictedDir(self):
         match self.currentDir:
             case Direction.UP:
@@ -83,5 +117,30 @@ class Ghost(Entity):
             case Direction.RIGHT:
                 self.restrictedDir = Direction.LEFT
 
+    def reverseDir(self):
+        match self.currentDir:
+            case Direction.UP:
+                self.currentDir = Direction.DOWN
+                self.restrictedDir = Direction.UP
+            case Direction.DOWN:
+                self.currentDir = Direction.UP
+                self.restrictedDir = Direction.DOWN
+            case Direction.LEFT:
+                self.currentDir = Direction.RIGHT
+                self.restrictedDir = Direction.LEFT
+            case Direction.RIGHT:
+                self.currentDir = Direction.LEFT
+                self.restrictedDir = Direction.RIGHT
+
     def draw(self, screen):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        match self.ghostState:
+            case GhostStates.InBox:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Chase:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Scatter:
+                screen.blit(self.image, (self.rect.x, self.rect.y))
+            case GhostStates.Frightened:
+                screen.blit(self.frightenedImage, (self.rect.x, self.rect.y))
+            case GhostStates.Eaten:
+                screen.blit(self.eatenImage, (self.rect.x, self.rect.y))

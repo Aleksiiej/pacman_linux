@@ -56,4 +56,4 @@ docs/_build/
 *.spec
 
 # venv files
-.venv
+env

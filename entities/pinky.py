@@ -12,6 +12,14 @@ class Pinky(Ghost):
                 pygame.image.load(f"assets/ghost_images/pink.png"),
                 (ENTITY_SIZE, ENTITY_SIZE),
             )
+            self.frightenedImage = pygame.transform.scale(
+                pygame.image.load(f"assets/ghost_images/powerup.png"),
+                (ENTITY_SIZE, ENTITY_SIZE),
+            )
+            self.eatenImage = pygame.transform.scale(
+                pygame.image.load(f"assets/ghost_images/dead.png"),
+                (ENTITY_SIZE, ENTITY_SIZE),
+            )
         self.restrictedDir = Direction.LEFT
         self.FPSCounter = 0
         self.ghostState = GhostStates.InBox
