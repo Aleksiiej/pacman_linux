@@ -27,7 +27,7 @@ class Pacman(Entity):
             self.rect.height,
             self.rect.centerx,
             self.rect.centery,
-            self.refToGhostGroup_
+            self.refToGhostGroup_,
         )
         ret.currentDir_, ret.proposedDir_ = self.currentDir_, self.proposedDir_
         return ret
@@ -40,22 +40,35 @@ class Pacman(Entity):
 
     def update(self, walls):
         checkbox = self.createCheckbox()
+        isAnyGhostFrightened = False
+        for ghost in self.refToGhostGroup_:
+            if ghost.ghostState_ == GhostStates.Frightened:
+                isAnyGhostFrightened = True
         for _ in range(VELOCITY):
-            if self.FPSCounter_ % 5 == 0:
-                self.updateFPSCounter()
-            else:
-                if self.currentDir_ == self.proposedDir_:
-                    self.checkMoveForward(checkbox, walls)
+            if not isAnyGhostFrightened:
+                if self.FPSCounter_ % 5 == 0:
+                    self.updateFPSCounter()
                 else:
-                    checkbox.currentDir_ = checkbox.proposedDir_
-                    self.move(checkbox)
-                    if self.checkCollisionWithWalls(checkbox, walls):
-                        checkbox = self.createCheckbox()
-                        self.checkMoveForward(checkbox, walls)
-                    else:
-                        self.currentDir_ = self.proposedDir_
-                        self.move(self)
-                self.updateFPSCounter()
+                    self.performMove(walls, checkbox)
+            else:
+                if self.FPSCounter_ % 7 == 0:
+                    self.updateFPSCounter()
+                else:
+                    self.performMove(walls, checkbox)
+
+    def performMove(self, walls, checkbox):
+        if self.currentDir_ == self.proposedDir_:
+            self.checkMoveForward(checkbox, walls)
+        else:
+            checkbox.currentDir_ = checkbox.proposedDir_
+            self.move(checkbox)
+            if self.checkCollisionWithWalls(checkbox, walls):
+                checkbox = self.createCheckbox()
+                self.checkMoveForward(checkbox, walls)
+            else:
+                self.currentDir_ = self.proposedDir_
+                self.move(self)
+        self.updateFPSCounter()
 
     def updateFPSCounter(self):
         if self.FPSCounter_ == 60:
