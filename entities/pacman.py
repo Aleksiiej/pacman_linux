@@ -4,7 +4,7 @@ from globalValues import *
 
 
 class Pacman(Entity):
-    def __init__(self, width, height, posX, posY, isCheckbox=True):
+    def __init__(self, width, height, posX, posY, refToGhostGroup, isCheckbox=True):
         super().__init__(width, height, posX, posY)
         if isCheckbox == False:
             self.images_ = [
@@ -19,6 +19,7 @@ class Pacman(Entity):
             self.animationCounter = 0
         self.proposedDir_ = Direction.RIGHT
         self.FPSCounter_ = 0
+        self.refToGhostGroup_ = refToGhostGroup
 
     def createCheckbox(self):
         ret = Pacman(
@@ -26,6 +27,7 @@ class Pacman(Entity):
             self.rect.height,
             self.rect.centerx,
             self.rect.centery,
+            self.refToGhostGroup_
         )
         ret.currentDir_, ret.proposedDir_ = self.currentDir_, self.proposedDir_
         return ret

@@ -10,36 +10,46 @@ class Ghost(Entity):
 
     def update(self, walls, pacman):
         for _ in range(VELOCITY):
-            if (self.FPSCounter_ % 4) == 0:
-                self.updateFPSCounter()
-            else:
-                possibleDirections = self.createListWithPossibleDirections(
-                    pacman, walls
-                )
-                if self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y:
-                    self.currentDir_ = Direction.UP
-                elif (
-                    self.rect.centerx == BLINKY_START_X
-                    and self.rect.centery == BLINKY_START_Y
-                    and self.currentDir_ == Direction.LEFT
-                    and self.ghostState_ != GhostStates.Eaten
-                ):
-                    self.currentDir_ = Direction.LEFT
-                elif (
-                    self.rect.centerx == BLINKY_START_X
-                    and self.rect.centery == BLINKY_START_Y
-                    and self.currentDir_ == Direction.RIGHT
-                    and self.ghostState_ != GhostStates.Eaten
-                ):
-                    self.currentDir_ = Direction.RIGHT
-                elif len(possibleDirections) > 0:
-                    self.currentDir_ = min(
-                        possibleDirections, key=possibleDirections.get
-                    )
-                self.setRestrictedDir()
-                self.move(self)
-                self.transferPosToOppositeSide()
-                self.updateFPSCounter()
+            if (
+                self.ghostState_ == GhostStates.Chase
+                or self.ghostState_ == GhostStates.Scatter
+                or self.ghostState_ == GhostStates.Eaten
+                or self.ghostState_ == GhostStates.InBox
+            ):
+                if (self.FPSCounter_ % 4) == 0:
+                    self.updateFPSCounter()
+                else:
+                    self.performMove(walls, pacman)
+            elif self.ghostState_ == GhostStates.Frightened:
+                if (self.FPSCounter_ % 2) == 0:
+                    self.updateFPSCounter()
+                else:
+                    self.performMove(walls, pacman)
+
+    def performMove(self, walls, pacman):
+        possibleDirections = self.createListWithPossibleDirections(pacman, walls)
+        if self.rect.centerx == HOUSE_X and self.rect.centery == HOUSE_Y:
+            self.currentDir_ = Direction.UP
+        elif (
+            self.rect.centerx == BLINKY_START_X
+            and self.rect.centery == BLINKY_START_Y
+            and self.currentDir_ == Direction.LEFT
+            and self.ghostState_ != GhostStates.Eaten
+        ):
+            self.currentDir_ = Direction.LEFT
+        elif (
+            self.rect.centerx == BLINKY_START_X
+            and self.rect.centery == BLINKY_START_Y
+            and self.currentDir_ == Direction.RIGHT
+            and self.ghostState_ != GhostStates.Eaten
+        ):
+            self.currentDir_ = Direction.RIGHT
+        elif len(possibleDirections) > 0:
+            self.currentDir_ = min(possibleDirections, key=possibleDirections.get)
+        self.setRestrictedDir()
+        self.move(self)
+        self.transferPosToOppositeSide()
+        self.updateFPSCounter()
 
     def updateFPSCounter(self):
         if self.FPSCounter_ == 60:

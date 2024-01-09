@@ -27,15 +27,20 @@ class Game:
         self.initNewGame()
 
     def initNewGame(self):
-        self.pacman_ = Pacman(
-            ENTITY_SIZE, ENTITY_SIZE, PACMAN_START_X, PACMAN_START_Y, False
-        )
         self.ghostGroup_ = pygame.sprite.Group()
         self.ghostGroup_.add(
             Blinky(ENTITY_SIZE, ENTITY_SIZE, BLINKY_START_X, BLINKY_START_Y, False)
         )
         self.ghostGroup_.add(
             Pinky(ENTITY_SIZE, ENTITY_SIZE, PINKY_START_X, PINKY_START_Y, False)
+        )
+        self.pacman_ = Pacman(
+            ENTITY_SIZE,
+            ENTITY_SIZE,
+            PACMAN_START_X,
+            PACMAN_START_Y,
+            self.ghostGroup_,
+            False,
         )
         self.wallGroup_ = pygame.sprite.Group()
         self.gateGroup_ = pygame.sprite.Group()
@@ -122,7 +127,7 @@ class Game:
         self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
         self.pacman_.update(self.wallGroup_)
         self.ghostGroup_.update(self.wallGroup_, self.pacman_)
-        self.running_ = not self.handleGhostCollision(self.pacman_, asyncFrightenedTimer)
+        self.running_ = not self.handleGhostCollision(self.pacman_)
         if not self.running_:
             self.gameResult_ = False
         self.handlePowerUpCollision(asyncFrightenedTimer)
@@ -176,7 +181,7 @@ class Game:
                 if ghost.ghostState_ == GhostStates.Frightened:
                     ghost.ghostState_ = GhostStates.Chase
 
-    def handleGhostCollision(self, pacman_, asyncFrightenedTimer):
+    def handleGhostCollision(self, pacman_):
         for ghost in self.ghostGroup_:
             if (
                 hypot(
