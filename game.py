@@ -191,7 +191,7 @@ class Game:
                 ):
                     return True
                 else:
-                    asyncFrightenedTimer.currentTime = 0
+                    asyncFrightenedTimer.currentTime_ = 0
                     if ghost.ghostState_ == GhostStates.Frightened:
                         self.scoreCounter_.incrementScoreBy30()
                         ghost.ghostState_ = GhostStates.Eaten
@@ -203,7 +203,7 @@ class Game:
                 for ghost in self.ghostGroup_:
                     ghost.ghostState_ = GhostStates.Frightened
                     ghost.reverseDir()
-                asyncFrightenedTimer.currentTime = 0
+                asyncFrightenedTimer.currentTime_ = 0
                 self.scoreCounter_.incrementScoreBy5()
                 self.powerUpGroup_.remove(powerUp)
 
