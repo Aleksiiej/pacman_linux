@@ -173,7 +173,8 @@ class Game:
         ):
             asyncFrightenedTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState_ = GhostStates.Chase
+                if ghost.ghostState_ == GhostStates.Frightened:
+                    ghost.ghostState_ = GhostStates.Chase
 
     def handleGhostCollision(self, pacman_, asyncFrightenedTimer):
         for ghost in self.ghostGroup_:
@@ -191,7 +192,6 @@ class Game:
                 ):
                     return True
                 else:
-                    asyncFrightenedTimer.currentTime_ = 0
                     if ghost.ghostState_ == GhostStates.Frightened:
                         self.scoreCounter_.incrementScoreBy30()
                         ghost.ghostState_ = GhostStates.Eaten
