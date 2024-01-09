@@ -151,6 +151,7 @@ class Game:
             self.gateGroup_.remove()
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
+        print(asyncFrightenedTimer.currentTime_)
         if (
             asyncScatterTimer.currentTime_ > CHASE_TIME
             and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Chase
@@ -205,9 +206,6 @@ class Game:
                 asyncFrightenedTimer.currentTime = 0
                 self.scoreCounter_.incrementScoreBy5()
                 self.powerUpGroup_.remove(powerUp)
-                if len(self.powerUpGroup_) == 0:
-                    del self.powerUpGroup_
-                pass
 
     def handleAppleCollision(self):
         for apple in self.appleGroup_:

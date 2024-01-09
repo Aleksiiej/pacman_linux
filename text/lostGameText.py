@@ -11,7 +11,7 @@ class LostGameText:
             self.lostGameTextImages_.append(self.text_.render(line, True, RED))
 
     def updateScore(self, scoreCounter):
-        self.message_.append("You score is: " + str(scoreCounter.score))
+        self.message_.append("You score is: " + str(scoreCounter.score_))
         self.lostGameTextImages_.append(self.text_.render(self.message_[1], True, RED))
         self.message_.append("Press any key to proceed... ")
         self.lostGameTextImages_.append(self.text_.render(self.message_[2], True, RED))
