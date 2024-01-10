@@ -9,7 +9,8 @@ class Ghost(Entity):
         super().__init__(width, height, posX, posY)
 
     def update(self, walls, pacman):
-        for _ in range(VELOCITY):
+        ghost_velocity = 3
+        for _ in range(ghost_velocity):
             if (
                 self.ghostState_ == GhostStates.Chase
                 or self.ghostState_ == GhostStates.Scatter

@@ -2,7 +2,6 @@ from enum import Enum
 
 SCREENSIZE = (1060, 840)
 FPS = 60
-VELOCITY = 3
 
 ENTITY_SIZE = 40
 APPLE_SIZE = 15

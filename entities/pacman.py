@@ -41,16 +41,16 @@ class Pacman(Entity):
     def update(self, walls):
         checkbox = self.createCheckbox()
         isAnyGhostFrightened = False
-        PACMAN_VELOCITY = 0
+        pacman_velocity = 0
         for ghost in self.refToGhostGroup_:
             if ghost.ghostState_ == GhostStates.Frightened:
                 isAnyGhostFrightened = True
         if isAnyGhostFrightened:
-            PACMAN_VELOCITY = 4
+            pacman_velocity = 4
         else:
-            PACMAN_VELOCITY = 3
+            pacman_velocity = 3
 
-        for _ in range(PACMAN_VELOCITY):
+        for _ in range(pacman_velocity):
             if self.FPSCounter_ % 5 == 0:
                 self.updateFPSCounter()
             else:
