@@ -4,6 +4,7 @@ from globalValues import *
 from entities.pacman import Pacman
 from entities.blinky import Blinky
 from entities.pinky import Pinky
+from entities.inky import Inky
 from text.scoreCounter import ScoreCounter
 from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
@@ -34,6 +35,9 @@ class Game:
         self.ghostGroup_.add(
             Pinky(ENTITY_SIZE, ENTITY_SIZE, PINKY_START_X, PINKY_START_Y, False)
         )
+        self.ghostGroup_.add(
+            Inky(ENTITY_SIZE, ENTITY_SIZE, INKY_START_X, INKY_START_Y, False)
+        )
         self.pacman_ = Pacman(
             ENTITY_SIZE,
             ENTITY_SIZE,
@@ -55,6 +59,7 @@ class Game:
         self.running_ = True
         self.gameResult_ = False
         self.wasBoxClosed_ = False
+        self.appleCounter = 0
 
     def run(self):
         while True:
@@ -156,7 +161,6 @@ class Game:
             self.gateGroup_.remove()
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
-        print(asyncFrightenedTimer.currentTime_)
         if (
             asyncScatterTimer.currentTime_ > CHASE_TIME
             and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Chase
@@ -206,8 +210,12 @@ class Game:
         for powerUp in self.powerUpGroup_:
             if powerUp.rect.colliderect(self.pacman_):
                 for ghost in self.ghostGroup_:
-                    ghost.ghostState_ = GhostStates.Frightened
-                    ghost.reverseDir()
+                    if (
+                        ghost.ghostState_ != GhostStates.InBox
+                        and ghost.ghostState_ != GhostStates.Wait
+                    ):
+                        ghost.ghostState_ = GhostStates.Frightened
+                        ghost.reverseDir()
                 asyncFrightenedTimer.currentTime_ = 0
                 self.scoreCounter_.incrementScoreBy5()
                 self.powerUpGroup_.remove(powerUp)
@@ -216,6 +224,8 @@ class Game:
         for apple in self.appleGroup_:
             if apple.rect.colliderect(self.pacman_):
                 self.appleGroup_.remove(apple)
+                self.ghostGroup_.sprites()[2].appleCounter += 1
+                print(self.ghostGroup_.sprites()[2].appleCounter)
                 if len(self.appleGroup_) == 0:
                     self.running_ = False
                     self.gameResult_ = True

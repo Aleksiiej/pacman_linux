@@ -26,6 +26,8 @@ class Ghost(Entity):
                     self.updateFPSCounter()
                 else:
                     self.performMove(walls, pacman)
+            elif self.ghostState_ == GhostStates.Wait:
+                pass
 
     def performMove(self, walls, pacman):
         possibleDirections = self.createListWithPossibleDirections(pacman, walls)
@@ -155,3 +157,5 @@ class Ghost(Entity):
                 screen.blit(self.frightenedImage_, (self.rect.x, self.rect.y))
             case GhostStates.Eaten:
                 screen.blit(self.eatenImage_, (self.rect.x, self.rect.y))
+            case GhostStates.Wait:
+                screen.blit(self.image_, (self.rect.x, self.rect.y))
