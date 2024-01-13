@@ -59,7 +59,7 @@ class Game:
         self.running_ = True
         self.gameResult_ = False
         self.wasBoxClosed_ = False
-        self.appleCounter = 0
+        self.appleCounter_ = 0
 
     def run(self):
         while True:
@@ -129,7 +129,7 @@ class Game:
 
     def update(self, asyncScatterTimer, asyncFrightenedTimer):
         self.handleGate()
-        # self.handleWaitingGhosts()
+        self.handleWaitingGhosts()
         self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
         self.pacman_.update(self.wallGroup_)
         self.ghostGroup_.update(self.wallGroup_, self.pacman_)
@@ -161,9 +161,13 @@ class Game:
         else:
             self.gateGroup_.remove()
 
-    # def handleWaitingGhosts():
-    #     for ghost in self.gh
-    #         if ghost.ghostState_ == GhostStates.Wait and ghost.appleCounter == 30
+    def handleWaitingGhosts(self):
+        counter = 0
+        if self.appleCounter_ == 30:
+            for ghost in self.ghostGroup_:
+                if ghost.ghostState_ == GhostStates.Wait:
+                    counter += 1
+                    ghost.ghostState_ = GhostStates.Chase
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if asyncScatterTimer.currentTime_ > CHASE_TIME:
@@ -222,8 +226,7 @@ class Game:
         for apple in self.appleGroup_:
             if apple.rect.colliderect(self.pacman_):
                 self.appleGroup_.remove(apple)
-                self.appleCounter += 1
-                print(self.appleCounter)
+                self.appleCounter_ += 1
                 if len(self.appleGroup_) == 0:
                     self.running_ = False
                     self.gameResult_ = True
