@@ -67,8 +67,6 @@ class Pacman(Entity):
                         self.move(self)
                 self.updateFPSCounter()
 
-
-
     def updateFPSCounter(self):
         if self.FPSCounter_ == 60:
             self.FPSCounter_ = 0

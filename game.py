@@ -128,6 +128,7 @@ class Game:
                         sys.exit()
 
     def update(self, asyncScatterTimer, asyncFrightenedTimer):
+        print(self.ghostGroup_.sprites()[2].ghostState_)
         self.handleGate()
         self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
         self.pacman_.update(self.wallGroup_)
@@ -167,14 +168,16 @@ class Game:
         ):
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState_ = GhostStates.Scatter
+                if ghost.ghostState_ == GhostStates.Chase:
+                    ghost.ghostState_ = GhostStates.Scatter
         elif (
             asyncScatterTimer.currentTime_ > SCATTER_TIME
             and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Scatter
         ):
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
-                ghost.ghostState_ = GhostStates.Chase
+                if ghost.ghostState_ == GhostStates.Scatter:
+                    ghost.ghostState_ = GhostStates.Chase
 
         if (
             asyncFrightenedTimer.currentTime_ > FRIGHTENED_TIME
@@ -211,8 +214,8 @@ class Game:
             if powerUp.rect.colliderect(self.pacman_):
                 for ghost in self.ghostGroup_:
                     if (
-                        ghost.ghostState_ != GhostStates.InBox
-                        and ghost.ghostState_ != GhostStates.Wait
+                        ghost.ghostState_ == GhostStates.Chase
+                        or ghost.ghostState_ == GhostStates.Scatter
                     ):
                         ghost.ghostState_ = GhostStates.Frightened
                         ghost.reverseDir()
@@ -225,7 +228,8 @@ class Game:
             if apple.rect.colliderect(self.pacman_):
                 self.appleGroup_.remove(apple)
                 self.ghostGroup_.sprites()[2].appleCounter += 1
-                print(self.ghostGroup_.sprites()[2].appleCounter)
+                # print(self.ghostGroup_.sprites()[2].appleCounter)
+
                 if len(self.appleGroup_) == 0:
                     self.running_ = False
                     self.gameResult_ = True
