@@ -162,27 +162,18 @@ class Game:
             self.gateGroup_.remove()
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
-        if (
-            asyncScatterTimer.currentTime_ > CHASE_TIME
-            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Chase
-        ):
+        if asyncScatterTimer.currentTime_ > CHASE_TIME:
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Chase:
                     ghost.ghostState_ = GhostStates.Scatter
-        elif (
-            asyncScatterTimer.currentTime_ > SCATTER_TIME
-            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Scatter
-        ):
+        elif asyncScatterTimer.currentTime_ > SCATTER_TIME:
             asyncScatterTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Scatter:
                     ghost.ghostState_ = GhostStates.Chase
 
-        if (
-            asyncFrightenedTimer.currentTime_ > FRIGHTENED_TIME
-            and self.ghostGroup_.sprites()[0].ghostState_ == GhostStates.Frightened
-        ):
+        if asyncFrightenedTimer.currentTime_ > FRIGHTENED_TIME:
             asyncFrightenedTimer.currentTime_ = 0
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Frightened:
