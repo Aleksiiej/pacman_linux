@@ -128,8 +128,8 @@ class Game:
                         sys.exit()
 
     def update(self, asyncScatterTimer, asyncFrightenedTimer):
-        print(self.ghostGroup_.sprites()[2].ghostState_)
         self.handleGate()
+        # self.handleWaitingGhosts()
         self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
         self.pacman_.update(self.wallGroup_)
         self.ghostGroup_.update(self.wallGroup_, self.pacman_)
@@ -160,6 +160,10 @@ class Game:
             self.wasBoxClosed_ = True
         else:
             self.gateGroup_.remove()
+
+    # def handleWaitingGhosts():
+    #     for ghost in self.gh
+    #         if ghost.ghostState_ == GhostStates.Wait and ghost.appleCounter == 30
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if asyncScatterTimer.currentTime_ > CHASE_TIME:
@@ -218,9 +222,8 @@ class Game:
         for apple in self.appleGroup_:
             if apple.rect.colliderect(self.pacman_):
                 self.appleGroup_.remove(apple)
-                self.ghostGroup_.sprites()[2].appleCounter += 1
-                # print(self.ghostGroup_.sprites()[2].appleCounter)
-
+                self.appleCounter += 1
+                print(self.appleCounter)
                 if len(self.appleGroup_) == 0:
                     self.running_ = False
                     self.gameResult_ = True

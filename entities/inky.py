@@ -23,7 +23,6 @@ class Inky(Ghost):
         self.restrictedDir_ = Direction.LEFT
         self.FPSCounter_ = 0
         self.ghostState_ = GhostStates.Wait
-        self.appleCounter = 0
 
     def calculateDistanceWhenInBox(self, checkbox):
         if self.rect.centery < 380:
