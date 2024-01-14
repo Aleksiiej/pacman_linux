@@ -11,11 +11,11 @@ from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
 from text.lostGameText import LostGameText
 from text.mainMenuText import MainMenuText
-from map.map import prepareMap
 from map.wall import Wall
-from math import hypot
 from timers.asyncScatterTimer import AsyncScatterTimer
 from timers.asyncFrightenedTimer import AsyncFrightenedTimer
+from map.map import prepareMap
+from math import hypot
 
 
 class Game:
@@ -91,7 +91,10 @@ class Game:
                     if not self.running_:
                         asyncScatterTimer.join()
                         self.showEndgameText()
-                        pygame.event.wait()
+                        while(True):
+                            event = pygame.event.wait()
+                            if event.type == pygame.KEYDOWN:
+                                break
                         self.initNewGame()
                         break
 
