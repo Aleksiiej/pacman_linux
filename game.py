@@ -5,6 +5,7 @@ from entities.pacman import Pacman
 from entities.blinky import Blinky
 from entities.pinky import Pinky
 from entities.inky import Inky
+from entities.clyde import Clyde
 from text.scoreCounter import ScoreCounter
 from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
@@ -38,6 +39,9 @@ class Game:
         self.ghostGroup_.add(
             Inky(ENTITY_SIZE, ENTITY_SIZE, INKY_START_X, INKY_START_Y, False)
         )
+        self.ghostGroup_.add(
+            Clyde(ENTITY_SIZE, ENTITY_SIZE, CLYDE_START_X, CLYDE_START_Y, False)
+        )
         self.pacman_ = Pacman(
             ENTITY_SIZE,
             ENTITY_SIZE,
@@ -60,6 +64,7 @@ class Game:
         self.gameResult_ = False
         self.wasBoxClosed_ = False
         self.appleCounter_ = 0
+        self.releaseGhostCounter = 0
 
     def run(self):
         while True:
@@ -162,12 +167,18 @@ class Game:
             self.gateGroup_.remove()
 
     def handleWaitingGhosts(self):
-        counter = 0
-        if self.appleCounter_ == 30:
-            for ghost in self.ghostGroup_:
-                if ghost.ghostState_ == GhostStates.Wait:
-                    counter += 1
-                    ghost.ghostState_ = GhostStates.Chase
+        if self.releaseGhostCounter < 2:
+            if self.appleCounter_ == 30 and self.releaseGhostCounter == 0:
+                self.releaseOneGhost()
+            if self.appleCounter_ == 70 and self.releaseGhostCounter == 1:
+                self.releaseOneGhost()
+
+    def releaseOneGhost(self):
+        for ghost in self.ghostGroup_:
+            if ghost.ghostState_ == GhostStates.Wait:
+                self.releaseGhostCounter += 1
+                ghost.ghostState_ = GhostStates.Chase
+                break
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if asyncScatterTimer.currentTime_ > CHASE_TIME:
