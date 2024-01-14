@@ -89,6 +89,8 @@ class Game:
                         pass
 
                     if not self.running_:
+                        asyncScatterTimer.join()
+                        asyncFrightenedTimer.join()
                         self.showEndgameText()
                         while(True):
                             event = pygame.event.wait()
@@ -105,12 +107,12 @@ class Game:
 
     def gameLoop(self, asyncScatterTimer, asyncFrightenedTimer):
         while self.running_:
-            self.processInput()
+            self.processInput(asyncScatterTimer, asyncFrightenedTimer)
             self.update(asyncScatterTimer, asyncFrightenedTimer)
             self.render()
             self.clock_.tick(FPS)
 
-    def processInput(self):
+    def processInput(self, asyncScatterTimer, asyncFrightenedTimer):
         for event in pygame.event.get():
             if (
                 event.type == pygame.QUIT
@@ -129,6 +131,8 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman_.proposedDir_ = Direction.RIGHT
                     case pygame.K_ESCAPE:
+                        asyncScatterTimer.join()
+                        asyncFrightenedTimer.join()
                         pygame.quit()
                         sys.exit()
 
