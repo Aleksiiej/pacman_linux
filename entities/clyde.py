@@ -33,10 +33,20 @@ class Clyde(Ghost):
         )
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
-        return hypot(
+        distanceFromPacman = hypot(
             pacman.rect.centerx - checkbox.rect.centerx,
             pacman.rect.centery - checkbox.rect.centery,
         )
+        if distanceFromPacman > 8 * ENTITY_SIZE:
+            return hypot(
+                pacman.rect.centerx - checkbox.rect.centerx,
+                pacman.rect.centery - checkbox.rect.centery,
+            )
+        else:
+            return hypot(
+                CLYDE_SCATTER_X - checkbox.rect.centerx,
+                CLYDE_SCATTER_Y - checkbox.rect.centery,
+            )
 
     def calculateDistanceWhenScatter(self, checkbox):
         return hypot(
