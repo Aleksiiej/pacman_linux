@@ -1,4 +1,5 @@
 import threading
+from threading import Lock
 import time
 import pygame
 
@@ -10,12 +11,19 @@ class AsyncScatterTimer(threading.Thread):
         self.endTime_ = 0
         self.currentTime_ = 0
         self.game_ = game
+        self.lock = Lock()
+
 
     def run(self):
         while True:
             if not self.game_.running_:
                 break
             self.endTime_ = time.time()
-            self.currentTime_ += self.endTime_ - self.startTime_
+            with self.lock:
+                self.currentTime_ += self.endTime_ - self.startTime_
             self.startTime_ = time.time()
             pygame.time.delay(100)
+
+    def resetTimer(self):
+        with self.lock:
+            self.currentTime_ = 0

@@ -92,7 +92,7 @@ class Game:
                         asyncScatterTimer.join()
                         asyncFrightenedTimer.join()
                         self.showEndgameText()
-                        while(True):
+                        while True:
                             event = pygame.event.wait()
                             if event.type == pygame.KEYDOWN:
                                 break
@@ -186,18 +186,18 @@ class Game:
 
     def handleTimers(self, asyncScatterTimer, asyncFrightenedTimer):
         if asyncScatterTimer.currentTime_ > CHASE_TIME:
-            asyncScatterTimer.currentTime_ = 0
+            asyncScatterTimer.resetTimer()
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Chase:
                     ghost.ghostState_ = GhostStates.Scatter
         elif asyncScatterTimer.currentTime_ > SCATTER_TIME:
-            asyncScatterTimer.currentTime_ = 0
+            asyncScatterTimer.resetTimer()
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Scatter:
                     ghost.ghostState_ = GhostStates.Chase
 
         if asyncFrightenedTimer.currentTime_ > FRIGHTENED_TIME:
-            asyncFrightenedTimer.currentTime_ = 0
+            asyncFrightenedTimer.resetTimer()
             for ghost in self.ghostGroup_:
                 if ghost.ghostState_ == GhostStates.Frightened:
                     ghost.ghostState_ = GhostStates.Chase
