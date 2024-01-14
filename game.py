@@ -55,6 +55,15 @@ class Game:
         self.appleGroup_ = pygame.sprite.Group()
         self.powerUpGroup_ = pygame.sprite.Group()
         prepareMap(self.wallGroup_, self.appleGroup_, self.powerUpGroup_)
+        self.gateGroup_.add(
+                Wall(
+                    ENTITY_SIZE,
+                    ENTITY_SIZE,
+                    380,
+                    340,
+                    BLUE,
+                )
+            )
 
         self.startgameText_ = StartgameText()
         self.scoreCounter_ = ScoreCounter()
@@ -137,7 +146,6 @@ class Game:
                         sys.exit()
 
     def update(self, asyncScatterTimer, asyncFrightenedTimer):
-        self.handleGate()
         self.handleWaitingGhosts()
         self.handleTimers(asyncScatterTimer, asyncFrightenedTimer)
         self.pacman_.update(self.wallGroup_)
@@ -147,28 +155,6 @@ class Game:
             self.gameResult_ = False
         self.handlePowerUpCollision(asyncFrightenedTimer)
         self.handleAppleCollision()
-
-    def handleGate(self):
-        counter = 0
-        for ghost in self.ghostGroup_:
-            if (
-                not ghost.ghostState_ == GhostStates.InBox
-                and not ghost.ghostState_ == GhostStates.Eaten
-            ):
-                counter += 1
-        if counter == len(self.ghostGroup_) and not self.wasBoxClosed_:
-            self.gateGroup_.add(
-                Wall(
-                    ENTITY_SIZE,
-                    ENTITY_SIZE,
-                    380,
-                    340,
-                    BLUE,
-                )
-            )
-            self.wasBoxClosed_ = True
-        else:
-            self.gateGroup_.remove()
 
     def handleWaitingGhosts(self):
         if self.releaseGhostCounter < 2:
