@@ -33,8 +33,7 @@ class Inky(Ghost):
         )
 
     def calculateDistanceWhenChase(self, pacman, checkbox):
-        pointAheadPacmanX = 0
-        pointAheadPacmanY = 0
+        pointAheadPacmanX, pointAheadPacmanY = 0, 0
         match pacman.currentDir_:
             case Direction.UP: 
                 pointAheadPacmanX = pacman.rect.centerx
@@ -54,6 +53,7 @@ class Inky(Ghost):
 
         destX = pointAheadPacmanX + distX
         destY = pointAheadPacmanY + distY
+
         return hypot(
             destX - checkbox.rect.centerx,
             destY - checkbox.rect.centery,
