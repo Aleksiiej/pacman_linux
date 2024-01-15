@@ -2,14 +2,16 @@ import pygame
 from globalValues import *
 
 
-class MainMenuText:
+class PauseText:
     def __init__(self):
         self.text_ = pygame.font.SysFont(None, 24)
         self.message_ = [
-            "1. Start game",
+            "1. Resume game",
             "2. Exit program",
             "To navigate choose number",
             "on keyboard",
+            "",
+            "GAME PAUSED",
         ]
         self.mainMenuTextImages_ = []
         for line in self.message_:

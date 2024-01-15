@@ -9,16 +9,16 @@ class StartgameText:
             "Welcome in Pacman",
             "INSTRUCTIONS:",
             "ARROW KEYS to control Pacman",
-            "P to pause and unpause game",
             "Press ENTER to start game...",
-            "Or ESCAPE to exit game",
+            "Or ESCAPE to pause and",
+            "game menu",
         ]
-        self.startgameTextImages = []
+        self.startgameTextImages_ = []
         for line in self.message_:
-            self.startgameTextImages.append(self.text_.render(line, True, RED))
+            self.startgameTextImages_.append(self.text_.render(line, True, RED))
 
     def draw(self, screen):
         posY = 50
-        for line in self.startgameTextImages:
+        for line in self.startgameTextImages_:
             screen.blit(line, (780, posY))
             posY += 30

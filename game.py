@@ -11,6 +11,7 @@ from text.startgameText import StartgameText
 from text.wonGameText import WonGameText
 from text.lostGameText import LostGameText
 from text.mainMenuText import MainMenuText
+from text.pauseText import PauseText
 from map.wall import Wall
 from timers.asyncScatterTimer import AsyncScatterTimer
 from timers.asyncFrightenedTimer import AsyncFrightenedTimer
@@ -56,19 +57,20 @@ class Game:
         self.powerUpGroup_ = pygame.sprite.Group()
         prepareMap(self.wallGroup_, self.appleGroup_, self.powerUpGroup_)
         self.gateGroup_.add(
-                Wall(
-                    ENTITY_SIZE,
-                    ENTITY_SIZE,
-                    380,
-                    340,
-                    BLUE,
-                )
+            Wall(
+                ENTITY_SIZE,
+                ENTITY_SIZE,
+                380,
+                340,
+                BLUE,
             )
+        )
 
         self.startgameText_ = StartgameText()
         self.scoreCounter_ = ScoreCounter()
         self.wonGameText_ = WonGameText()
         self.lostGameText_ = LostGameText()
+        self.pauseText_ = PauseText()
         self.running_ = True
         self.gameResult_ = False
         self.wasBoxClosed_ = False
@@ -140,10 +142,18 @@ class Game:
                     case pygame.K_RIGHT:
                         self.pacman_.proposedDir_ = Direction.RIGHT
                     case pygame.K_ESCAPE:
-                        asyncScatterTimer.join()
-                        asyncFrightenedTimer.join()
-                        pygame.quit()
-                        sys.exit()
+                        self.showPauseText()
+                        while True:
+                            event = pygame.event.wait()
+                            if event.type == pygame.KEYDOWN:
+                                match event.key:
+                                    case pygame.K_1:
+                                        break
+                                    case pygame.K_2:
+                                        asyncScatterTimer.join()
+                                        asyncFrightenedTimer.join()
+                                        pygame.quit()
+                                        sys.exit()
 
     def update(self, asyncScatterTimer, asyncFrightenedTimer):
         self.handleWaitingGhosts()
@@ -266,4 +276,9 @@ class Game:
         else:
             self.lostGameText_.updateScore(self.scoreCounter_)
             self.lostGameText_.draw(self.screen)
+        pygame.display.flip()
+
+    def showPauseText(self):
+        self.render()
+        self.pauseText_.draw(self.screen)
         pygame.display.flip()
