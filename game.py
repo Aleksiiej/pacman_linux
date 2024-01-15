@@ -23,7 +23,7 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.font.init()
-        self.screen = pygame.display.set_mode(SCREENSIZE)
+        self.screen_ = pygame.display.set_mode(SCREENSIZE)
         pygame.display.set_caption("Pacman")
         self.clock_ = pygame.time.Clock()
         self.mainMenuText_ = MainMenuText()
@@ -246,39 +246,39 @@ class Game:
                 break
 
     def render(self):
-        self.screen.fill(BLACK)
-        self.pacman_.draw(self.screen)
-        self.wallGroup_.draw(self.screen)
-        self.gateGroup_.draw(self.screen)
+        self.screen_.fill(BLACK)
+        self.pacman_.draw(self.screen_)
+        self.wallGroup_.draw(self.screen_)
+        self.gateGroup_.draw(self.screen_)
         if len(self.appleGroup_) > 0:
-            self.appleGroup_.draw(self.screen)
+            self.appleGroup_.draw(self.screen_)
         if len(self.powerUpGroup_) > 0:
-            self.powerUpGroup_.draw(self.screen)
+            self.powerUpGroup_.draw(self.screen_)
         for ghost in self.ghostGroup_:
-            ghost.draw(self.screen)
-        self.scoreCounter_.draw(self.screen)
+            ghost.draw(self.screen_)
+        self.scoreCounter_.draw(self.screen_)
         pygame.display.flip()
 
     def showMainMenuText(self):
         self.render()
-        self.mainMenuText_.draw(self.screen)
+        self.mainMenuText_.draw(self.screen_)
         pygame.display.flip()
 
     def showStartGameText(self):
         self.render()
-        self.startgameText_.draw(self.screen)
+        self.startgameText_.draw(self.screen_)
         pygame.display.flip()
 
     def showEndgameText(self):
         if self.gameResult_:
             self.wonGameText_.updateScore(self.scoreCounter_)
-            self.wonGameText_.draw(self.screen)
+            self.wonGameText_.draw(self.screen_)
         else:
             self.lostGameText_.updateScore(self.scoreCounter_)
-            self.lostGameText_.draw(self.screen)
+            self.lostGameText_.draw(self.screen_)
         pygame.display.flip()
 
     def showPauseText(self):
         self.render()
-        self.pauseText_.draw(self.screen)
+        self.pauseText_.draw(self.screen_)
         pygame.display.flip()
