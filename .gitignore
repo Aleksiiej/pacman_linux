@@ -12,7 +12,6 @@ __pycache__/
 bin/
 build/
 develop-eggs/
-dist/
 eggs/
 lib/
 lib64/
@@ -22,6 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+_internal/
 
 # Installer logs
 pip-log.txt
