@@ -1,5 +1,4 @@
 # Python Pacman-Style Game Project
-## !!!PROJECT IN PROGRESS!!!
 
 ## Project Overview
 This project is a homage to the classic arcade game Pacman, recreated using Python and the Pygame library. The primary focus of this project was to enhance my skills in Python programming and gain practical experience with the Pygame graphics library.
