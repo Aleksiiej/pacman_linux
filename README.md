@@ -30,3 +30,5 @@ This project is a homage to the classic arcade game Pacman, recreated using Pyth
 - Ensure Python and Pygame are installed on your Linux system.
 - Clone the repository.
 - Run the game script with command ./main.py.
+OR
+- Run file "main" from directory dist (standalone executable)
