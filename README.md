@@ -31,4 +31,4 @@ This project is a homage to the classic arcade game Pacman, recreated using Pyth
 - Clone the repository.
 - Run the game script with command ./main.py.
 OR
-- Run file "main" from directory dist (standalone executable)
+- Run file "main" from directory dist (standalone executable).
